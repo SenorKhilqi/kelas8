@@ -283,10 +283,20 @@ function buildPrisma() {
   // Semua face menggunakan GLASS_COLOR secara default
   const allFaces  = [fBack, fLeft, fRight, fAlas, fTutup];
   const defColors = allFaces.map(() => GLASS_COLOR);
+  const netColors = [clr.alas, clr.sisi[0], clr.sisi[1], clr.alas, clr.tutup];
 
   return {
     group: grp, type: 'prisma',
     allFaces, defColors, edgesGrp, edgeHLGrp, vtxGrp, tGrp,
+
+    setColorfulMode(isColorful) {
+      allFaces.forEach((f, i) => {
+        f.material.color.set(isColorful ? netColors[i] : defColors[i]);
+        f.material.opacity = isColorful ? 0.92 : OPC_DEFAULT;
+        f.material.emissive.set(isColorful ? 0x000000 : 0x112233);
+        f.material.emissiveIntensity = isColorful ? 0 : 0.15;
+      });
+    },
 
     updateNet(t) {
       allFaces.forEach(f => lerpFace(f, t));
@@ -414,10 +424,20 @@ function buildLimas() {
 
   const allFaces  = [fAlas, fAB, fBC, fCD, fDA];
   const defColors = allFaces.map(() => GLASS_COLOR);
+  const netColors = [clr.alas, ...clr.sisi];
 
   return {
     group: grp, type: 'limas',
     allFaces, defColors, edgesGrp, edgeHLGrp, vtxGrp, tGrp,
+
+    setColorfulMode(isColorful) {
+      allFaces.forEach((f, i) => {
+        f.material.color.set(isColorful ? netColors[i] : defColors[i]);
+        f.material.opacity = isColorful ? 0.92 : OPC_DEFAULT;
+        f.material.emissive.set(isColorful ? 0x000000 : 0x112233);
+        f.material.emissiveIntensity = isColorful ? 0 : 0.15;
+      });
+    },
 
     updateNet(t) {
       allFaces.forEach(f => lerpFace(f, t));
@@ -722,6 +742,11 @@ const App = {
     App.resetHighlight();
     App.updateNet(100);
     document.getElementById('net-slider').value = 100;
+
+    const m = _cur();
+    if (m && m.setColorfulMode) {
+      m.setColorfulMode(ST.scene === 3);
+    }
   },
 
   switchScene(n) {
@@ -744,6 +769,11 @@ const App = {
     if (n !== 2) {
       const m = _cur();
       if (m) { m.group.rotation.x = 0; m.group.rotation.y = 0; }
+    }
+
+    const m = _cur();
+    if (m && m.setColorfulMode) {
+      m.setColorfulMode(n === 3);
     }
   },
 
