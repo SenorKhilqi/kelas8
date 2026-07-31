@@ -574,7 +574,9 @@ function moveDemoCamera() {
     r * Math.cos(ph),
     r * Math.sin(ph) * Math.cos(th)
   );
-  DC.lookAt(0, 0, 0);
+  // Geser titik fokus kamera sedikit ke bawah, agar posisi model 3D
+  // tampak lebih "naik" di layar dan tidak tertutup UI panel bawah
+  DC.lookAt(0, -0.4, 0);
 }
 
 function setupDrag(el) {
@@ -706,6 +708,9 @@ function tickOrient() {
 const App = {
 
   startAR() {
+    if (!window.isSecureContext) {
+      alert("⚠️ PERHATIAN:\nBrowser biasanya memblokir akses kamera jika situs tidak diakses menggunakan HTTPS atau localhost (127.0.0.1).\nJika kamera tidak muncul, silakan gunakan koneksi yang aman.");
+    }
     document.getElementById('overlay-intro').classList.remove('active');
     document.getElementById('ui-panel').style.display = 'flex';
     document.getElementById('mode-badge').textContent = 'AR';

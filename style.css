@@ -549,6 +549,11 @@ html, body {
 .panel-header {
   margin-bottom: 0.65rem;
 }
+.panel-header:empty {
+  display: none;
+  margin: 0;
+  padding: 0;
+}
 .panel-header h3 {
   font-size: 0.88rem;
   font-weight: 700;
