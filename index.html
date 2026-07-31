@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>LKPD AR — Bangun Ruang Sisi Datar | Kelas VIII SMP</title>
+  <meta name="description" content="LKPD Interaktif berbasis WebAR untuk Prisma Segitiga dan Limas Segiempat — Matematika Kelas VIII SMP">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     INTRO OVERLAY
+════════════════════════════════════════ -->
+<div id="overlay-intro" class="overlay active">
+  <div class="overlay-bg"></div>
+
+  <div class="intro-card glass">
+
+    <!-- Header -->
+    <div class="intro-header">
+      <div class="intro-logo">📐</div>
+      <div class="intro-brand">
+        <span class="brand-tag">LKPD Interaktif WebAR</span>
+        <h1>Bangun Ruang</h1>
+      </div>
+    </div>
+
+    <!-- Subtitle -->
+    <div class="intro-body">
+      <h2>Prisma Segitiga &amp; Limas Segiempat</h2>
+      <div class="grade-pill">📚 Matematika · Kelas VIII SMP</div>
+    </div>
+
+    <!-- Feature Tags -->
+    <div class="intro-features">
+      <div class="feat">🔍 <span>Unsur-unsur</span></div>
+      <div class="feat">↔️ <span>Orientasi</span></div>
+      <div class="feat">📐 <span>Jaring-jaring</span></div>
+    </div>
+
+    <!-- CTA Buttons -->
+    <div class="intro-actions">
+      <button class="btn-primary" id="btn-start-ar" onclick="App.startAR()">
+        <span class="btn-icon">📷</span>
+        <span class="btn-texts">
+          <span class="btn-title">Mulai dengan AR</span>
+          <span class="btn-sub">Butuh marker Hiro + kamera</span>
+        </span>
+      </button>
+      <button class="btn-secondary" id="btn-start-demo" onclick="App.startDemo()">
+        <span class="btn-icon">🖥️</span>
+        <span class="btn-texts">
+          <span class="btn-title">Mode Demo</span>
+          <span class="btn-sub">Tanpa kamera, langsung jelajahi</span>
+        </span>
+      </button>
+    </div>
+
+    <button class="btn-link" onclick="App.showMarker()">📋 Tampilkan Marker Hiro</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     MARKER MODAL
+════════════════════════════════════════ -->
+<div id="modal-marker" class="modal-backdrop" onclick="App.hideMarker()">
+  <div class="modal-card glass" onclick="event.stopPropagation()">
+    <div class="modal-top">
+      <h3>Marker Hiro</h3>
+      <button class="modal-close" onclick="App.hideMarker()">✕</button>
+    </div>
+    <p>Cetak atau tampilkan gambar ini, lalu arahkan kamera ke marker.</p>
+    <div class="marker-wrap">
+      <img id="hiro-img"
+        src="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png"
+        alt="Hiro AR Marker"
+        class="marker-img"
+        onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect width=%22200%22 height=%22200%22 fill=%22%23fff%22/><rect x=%2210%22 y=%2210%22 width=%22180%22 height=%22180%22 fill=%22%23000%22/><rect x=%2225%22 y=%2225%22 width=%22150%22 height=%22150%22 fill=%22%23fff%22/><rect x=%2240%22 y=%2240%22 width=%22120%22 height=%22120%22 fill=%22%23000%22/><rect x=%2260%22 y=%2260%22 width=%2280%22 height=%2280%22 fill=%22%23fff%22/><rect x=%2278%22 y=%2278%22 width=%2244%22 height=%2244%22 fill=%22%23000%22/></svg>'">
+    </div>
+    <p class="marker-tip">💡 Ideal: cetak 8 × 8 cm atau lebih besar</p>
+    <button class="btn-secondary sm" onclick="App.hideMarker()">Tutup</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     DEMO CANVAS
+════════════════════════════════════════ -->
+<div id="demo-container" style="display:none">
+  <canvas id="demo-canvas"></canvas>
+  <div class="demo-badge">Demo Mode</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     AR CONTAINER (injected by JS)
+════════════════════════════════════════ -->
+<div id="ar-container" style="display:none; position:fixed; inset:0; z-index:1;"></div>
+
+<!-- ════════════════════════════════════════
+     UI PANEL
+════════════════════════════════════════ -->
+<div id="ui-panel" style="display:none" class="ui-panel">
+
+  <!-- Top Bar -->
+  <div class="top-bar glass">
+    <div class="shape-switch">
+      <button class="shape-btn active" id="sbtn-prisma" onclick="App.switchShape('prisma')">🔷 Prisma</button>
+      <button class="shape-btn"        id="sbtn-limas"  onclick="App.switchShape('limas')">🔺 Limas</button>
+    </div>
+    <span class="mode-badge" id="mode-badge">Demo</span>
+  </div>
+
+  <!-- Scene Tabs -->
+  <div class="scene-tabs glass">
+    <button class="tab active" id="tab-1" onclick="App.switchScene(1)">
+      <span class="tab-icon">🔍</span>
+      <span>Unsur-unsur</span>
+    </button>
+    <button class="tab" id="tab-2" onclick="App.switchScene(2)">
+      <span class="tab-icon">↔️</span>
+      <span>Orientasi</span>
+    </button>
+    <button class="tab" id="tab-3" onclick="App.switchScene(3)">
+      <span class="tab-icon">📐</span>
+      <span>Jaring-jaring</span>
+    </button>
+  </div>
+
+  <!-- ── Panel 1: Unsur-unsur ── -->
+  <div id="panel-1" class="scene-panel glass">
+    <div class="panel-header">
+      <h3>Unsur-unsur Bangun Ruang</h3>
+      <p>Klik untuk menyorot elemen pada model 3D</p>
+    </div>
+    <div class="elem-grid">
+      <button class="elem-btn" id="ebtn-alas"   onclick="App.highlightEl('alas')">
+        <span class="elem-icon">⬡</span>
+        <span id="lbl-alas">Alas &amp; Tutup</span>
+      </button>
+      <button class="elem-btn" id="ebtn-tinggi" onclick="App.highlightEl('tinggi')">
+        <span class="elem-icon">📏</span>
+        <span>Tinggi (t)</span>
+      </button>
+      <button class="elem-btn" id="ebtn-rusuk"  onclick="App.highlightEl('rusuk')">
+        <span class="elem-icon">⬚</span>
+        <span>Rusuk</span>
+      </button>
+      <button class="elem-btn" id="ebtn-titik"  onclick="App.highlightEl('titik')">
+        <span class="elem-icon">●</span>
+        <span>Titik Sudut</span>
+      </button>
+    </div>
+    <button class="btn-reset" onclick="App.resetHighlight()">🔄 Reset Tampilan</button>
+  </div>
+
+  <!-- ── Panel 2: Orientasi ── -->
+  <div id="panel-2" class="scene-panel glass" style="display:none">
+    <div class="panel-header">
+      <h3>Orientasi Bangun Ruang</h3>
+      <p>Seret/swipe untuk memutar model 360°</p>
+    </div>
+    <div class="orient-center">
+      <button class="orient-btn" id="orient-btn" onclick="App.toggleOrient()">
+        <span class="orient-icon" id="orient-icon">↩️</span>
+        <span id="orient-lbl">Rebahkan</span>
+      </button>
+    </div>
+    <div class="hints">
+      <div class="hint">👆 Seret layar untuk memutar 360°</div>
+      <div class="hint">🔄 Tombol untuk rebahkan / tegakkan</div>
+    </div>
+  </div>
+
+  <!-- ── Panel 3: Jaring-jaring ── -->
+  <div id="panel-3" class="scene-panel glass" style="display:none">
+    <div class="panel-header">
+      <h3>Jaring-jaring Bangun Ruang</h3>
+      <p>Geser slider untuk membuka/menutup jaring</p>
+    </div>
+    <div class="slider-section">
+      <div class="slider-labels">
+        <span>📄 Jaring 2D</span>
+        <span class="slider-pct" id="slider-pct">100%</span>
+        <span>🧊 Bangun 3D</span>
+      </div>
+      <input type="range" id="net-slider" class="net-slider"
+        min="0" max="100" value="100"
+        oninput="App.updateNet(this.value)">
+      <div class="slider-state" id="slider-state">Bangun 3D penuh</div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="bottom-bar">
+    <button class="btn-back" onclick="App.goBack()">← Kembali</button>
+    <span class="app-credit">LKPD AR · Kelas VIII SMP</span>
+  </div>
+
+</div><!-- /ui-panel -->
+
+<script src="app.js"></script>
+</body>
+</html>
