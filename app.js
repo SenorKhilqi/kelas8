@@ -657,6 +657,7 @@ let AM_cur = null;
 let arSceneEl = null;
 
 function initAR() {
+  document.body.classList.add('ar-active');
   const cont = document.getElementById('ar-container');
   cont.innerHTML = `
     <a-scene embedded arjs="sourceType:webcam; debugUIEnabled:false; detectionMode:mono_and_matrix; matrixCodeType:3x3;" renderer="antialias:true; alpha:true;" vr-mode-ui="enabled:false" loading-screen="enabled:false" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;">
@@ -852,6 +853,7 @@ const App = {
     if (ST.mode === 'ar') {
       if (arSceneEl) { arSceneEl.remove(); arSceneEl = null; }
       document.getElementById('ar-container').style.display = 'none';
+      document.body.classList.remove('ar-active');
       AM = {}; AM_cur = null;
     }
 

@@ -54,6 +54,10 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+body.ar-active {
+  background: transparent !important;
+}
+
 /* ════════════════════════════════════════════
    GLASSMORPHISM UTILITY
 ════════════════════════════════════════════ */
