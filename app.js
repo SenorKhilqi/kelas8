@@ -27,18 +27,35 @@ const CFG = {
   },
 };
 
+// ── Material KACA BENING ──────────────────────────────────
+// Semua face menggunakan warna putih-biru pucat (seperti kaca kristal).
+// Warna sisi sedikit berbeda agar terlihat depth tanpa mengganggu highlight.
+const GLASS_COLOR = 0xDDEEFF;   // putih kebiruan, warna kaca bening
+
 const CLR = {
   prisma: {
-    alas:  0x4ECDC4, tutup: 0x45B7D1,
-    sisi:  [0x96CEB4, 0xFECA57, 0xFF9F43],
-    edge:  0x1a1a3a, vertex: 0xE84393, height: 0xFF6B6B,
+    // Semua face sama: kaca bening (putih kebiruan)
+    alas:   GLASS_COLOR,
+    tutup:  GLASS_COLOR,
+    sisi:   [GLASS_COLOR, GLASS_COLOR, GLASS_COLOR],
+    // Edge: putih bercahaya seperti tepi kaca terkena cahaya
+    edge:   0xAADDFF,
+    vertex: 0x00FFEE,
+    height: 0xFF6B6B,
   },
   limas: {
-    alas:  0x4ECDC4,
-    sisi:  [0x45B7D1, 0x96CEB4, 0xFECA57, 0xFF9F43],
-    edge:  0x1a1a3a, vertex: 0xE84393, height: 0xFF6B6B,
+    alas:   GLASS_COLOR,
+    sisi:   [GLASS_COLOR, GLASS_COLOR, GLASS_COLOR, GLASS_COLOR],
+    edge:   0xAADDFF,
+    vertex: 0x00FFEE,
+    height: 0xFF6B6B,
   },
 };
+
+// ── Opacity levels ────────────────────────────────────────
+const OPC_DEFAULT = 0.08;  // kaca bening — hampir tidak terlihat bidangnya
+const OPC_DIM     = 0.03;  // pudar ekstrem saat ada highlight aktif
+const OPC_BRIGHT  = 0.88;  // element yang di-highlight: penuh & jelas
 
 const HL_CLR = { alas: 0xFF6B6B, tutup: 0xFFD700, rusuk: 0x00FF99, titik: 0xFF1493 };
 
@@ -46,13 +63,19 @@ const HL_CLR = { alas: 0xFF6B6B, tutup: 0xFFD700, rusuk: 0x00FF99, titik: 0xFF14
    GEOMETRY HELPERS
 ═══════════════════════════════════════════════════════════ */
 
-/** Buat face mesh dengan kemampuan animasi net/fold */
+/** Buat face mesh dengan efek kaca bening */
 function makeFace(netV, foldV, color, isQuad) {
   const T = window.THREE;
   const mat = new T.MeshPhongMaterial({
-    color, side: T.DoubleSide,
-    transparent: true, opacity: 0.92,
-    shininess: 60, specular: new T.Color(0x444488),
+    color,
+    side: T.DoubleSide,
+    transparent: true,
+    opacity: OPC_DEFAULT,
+    depthWrite: false,      // wajib agar layering transparan tidak z-fight
+    shininess: 220,         // sangat tinggi → kilap kaca
+    specular: new T.Color(0xFFFFFF),  // putih cerah → highlight putih seperti kaca
+    emissive: new T.Color(0x112233),  // sedikit biru di gelap → kesan kaca dingin
+    emissiveIntensity: 0.15,
   });
   const n = isQuad ? 6 : 3;
   const arr = new Float32Array(n * 3);
@@ -87,12 +110,37 @@ function lerpFace(mesh, t) {
   mesh.geometry.computeVertexNormals();
 }
 
-/** Buat garis rusuk antara dua titik */
+/** Buat garis rusuk antara dua titik — edge kaca bercahaya */
 function makeEdge(v1, v2, color) {
   const T = window.THREE;
   const geo = new T.BufferGeometry().setFromPoints([v1.clone(), v2.clone()]);
-  const mat = new T.LineBasicMaterial({ color: color || 0x000000 });
+  // Edge utama: warna terang
+  const mat = new T.LineBasicMaterial({ color: color || 0xAADDFF });
   return new T.Line(geo, mat);
+}
+
+/** Buat edge "glow" tipis menggunakan cylinder kecil sebagai alternatif
+ *  agar ada kesan tebal dan bercahaya (THREE.js tidak support linewidth > 1 di WebGL) */
+function makeGlowEdge(v1, v2, color) {
+  const T = window.THREE;
+  const dir  = new T.Vector3().subVectors(v2, v1);
+  const len  = dir.length();
+  const mid  = new T.Vector3().addVectors(v1, v2).multiplyScalar(0.5);
+
+  const geo = new T.CylinderGeometry(0.004, 0.004, len, 6, 1);
+  const mat = new T.MeshBasicMaterial({
+    color: color || 0xAADDFF,
+    transparent: true,
+    opacity: 0.85,
+    depthWrite: false,
+  });
+  const mesh = new T.Mesh(geo, mat);
+  mesh.position.copy(mid);
+
+  // Orientasi cylinder mengikuti arah edge
+  const axis = new T.Vector3(0, 1, 0);
+  mesh.quaternion.setFromUnitVectors(axis, dir.clone().normalize());
+  return mesh;
 }
 
 /** Buat bola kecil di titik sudut */
@@ -183,20 +231,24 @@ function buildPrisma() {
   const fAlas  = makeFace([nC.clone(),nB.clone(),nAa],                   [vC,vB,vA],    clr.alas,    false);
   const fTutup = makeFace([nE.clone(),nF.clone(),nDt],                   [vE,vF,vD],    clr.tutup,   false);
 
-  // ── Edges ──
+  // ── Edges: Line + Glow Cylinder ──
   const ec = clr.edge;
-  const edgeLines = [
-    makeEdge(vA,vB,ec), makeEdge(vB,vC,ec), makeEdge(vC,vA,ec), // bawah
-    makeEdge(vD,vE,ec), makeEdge(vE,vF,ec), makeEdge(vF,vD,ec), // atas
-    makeEdge(vA,vD,ec), makeEdge(vB,vE,ec), makeEdge(vC,vF,ec), // vertikal
+  const edgePairs = [
+    [vA,vB], [vB,vC], [vC,vA],       // bawah
+    [vD,vE], [vE,vF], [vF,vD],       // atas
+    [vA,vD], [vB,vE], [vC,vF],       // vertikal
   ];
+  const edgeLines = edgePairs.map(([a,b]) => makeEdge(a, b, ec));
 
   // ── Edge Highlights ──
-  const edgeHL = edgeLines.map(e => {
-    const g = e.geometry.clone();
+  const edgeHL = edgePairs.map(([a,b]) => {
+    const g = new T.BufferGeometry().setFromPoints([a.clone(), b.clone()]);
     const m = new T.LineBasicMaterial({ color: HL_CLR.rusuk });
     const l = new T.Line(g, m); l.visible = false; return l;
   });
+
+  // Glow edge (cylinder kecil bercahaya) — efek tepi kaca
+  const glowEdges = edgePairs.map(([a,b]) => makeGlowEdge(a, b, ec));
 
   // ── Vertex Spheres & Labels ──
   const vs3d   = [vA,vB,vC,vD,vE,vF];
@@ -220,6 +272,7 @@ function buildPrisma() {
 
   const edgesGrp = new T.Group();
   edgeLines.forEach(e => edgesGrp.add(e));
+  glowEdges.forEach(e => edgesGrp.add(e));  // tambah glow cylinder
 
   const edgeHLGrp = new T.Group(); edgeHLGrp.visible = false;
   edgeHL.forEach(e => edgeHLGrp.add(e));
@@ -227,8 +280,9 @@ function buildPrisma() {
   const grp = new T.Group();
   grp.add(facesGrp, edgesGrp, edgeHLGrp, vtxGrp, tGrp);
 
+  // Semua face menggunakan GLASS_COLOR secara default
   const allFaces  = [fBack, fLeft, fRight, fAlas, fTutup];
-  const defColors = [clr.alas, clr.sisi[0], clr.sisi[1], clr.alas, clr.tutup];
+  const defColors = allFaces.map(() => GLASS_COLOR);
 
   return {
     group: grp, type: 'prisma',
@@ -241,25 +295,50 @@ function buildPrisma() {
 
     highlight(el) {
       this.resetHL();
+
       if (el === 'alas') {
+        // Redupkan semua sisi tegak
+        [fLeft, fRight, fBack].forEach(f => {
+          f.material.opacity = OPC_DIM;
+        });
+        // Highlight alas (bawah) & tutup (atas) dengan warna + penuh
         [fAlas, fTutup].forEach(f => {
           f.material.color.set(HL_CLR.alas);
-          f.material.emissive.set(0xFF6B6B); f.material.emissiveIntensity = 0.28;
+          f.material.emissive.set(0xFF4444);
+          f.material.emissiveIntensity = 0.5;
+          f.material.opacity = OPC_BRIGHT;
         });
-        fBack.material.color.set(HL_CLR.alas);
-        fBack.material.emissive.set(0xFF6B6B); fBack.material.emissiveIntensity = 0.15;
       }
-      if (el === 'tinggi') tGrp.visible = true;
-      if (el === 'rusuk')  edgeHLGrp.visible = true;
-      if (el === 'titik')  vtxGrp.visible = true;
+
+      if (el === 'tinggi') {
+        // Redupkan semua face, tampilkan garis tinggi
+        allFaces.forEach(f => { f.material.opacity = OPC_DIM; });
+        tGrp.visible = true;
+      }
+
+      if (el === 'rusuk') {
+        // Redupkan semua face, tampilkan highlight rusuk
+        allFaces.forEach(f => { f.material.opacity = OPC_DIM; });
+        edgeHLGrp.visible = true;
+      }
+
+      if (el === 'titik') {
+        // Redupkan semua face, tampilkan titik sudut
+        allFaces.forEach(f => { f.material.opacity = OPC_DIM; });
+        vtxGrp.visible = true;
+      }
     },
 
     resetHL() {
       allFaces.forEach((f, i) => {
         f.material.color.set(defColors[i]);
-        f.material.emissive.set(0); f.material.emissiveIntensity = 0;
+        f.material.emissive.set(0);
+        f.material.emissiveIntensity = 0;
+        f.material.opacity = OPC_DEFAULT;
       });
-      edgeHLGrp.visible = false; vtxGrp.visible = false; tGrp.visible = false;
+      edgeHLGrp.visible = false;
+      vtxGrp.visible = false;
+      tGrp.visible = false;
     },
   };
 }
@@ -296,18 +375,21 @@ function buildLimas() {
   const fCD   = makeFace([nC.clone(),nD.clone(),nTCD], [vC,vD,vT], clr.sisi[2], false);
   const fDA   = makeFace([nD.clone(),nA.clone(),nTDA], [vD,vA,vT], clr.sisi[3], false);
 
-  // ── Edges ──
+  // ── Edges: Line + Glow Cylinder ──
   const ec = clr.edge;
-  const edgeLines = [
-    makeEdge(vA,vB,ec), makeEdge(vB,vC,ec), makeEdge(vC,vD,ec), makeEdge(vD,vA,ec), // alas
-    makeEdge(vA,vT,ec), makeEdge(vB,vT,ec), makeEdge(vC,vT,ec), makeEdge(vD,vT,ec), // lateral
+  const edgePairsL = [
+    [vA,vB], [vB,vC], [vC,vD], [vD,vA], // alas
+    [vA,vT], [vB,vT], [vC,vT], [vD,vT], // lateral
   ];
+  const edgeLines = edgePairsL.map(([a,b]) => makeEdge(a, b, ec));
 
-  const edgeHL = edgeLines.map(e => {
-    const g = e.geometry.clone();
+  const edgeHL = edgePairsL.map(([a,b]) => {
+    const g = new T.BufferGeometry().setFromPoints([a.clone(), b.clone()]);
     const m = new T.LineBasicMaterial({ color: HL_CLR.rusuk });
     const l = new T.Line(g, m); l.visible = false; return l;
   });
+
+  const glowEdges = edgePairsL.map(([a,b]) => makeGlowEdge(a, b, ec));
 
   const vtxGrp = new T.Group(); vtxGrp.visible = false;
   [[vA,'A'],[vB,'B'],[vC,'C'],[vD,'D'],[vT,'T']].forEach(([v,n]) => {
@@ -321,7 +403,9 @@ function buildLimas() {
   tGrp.add(makeLabel('t', new T.Vector3(0.06, 0, 0), '#FF6B6B'));
 
   const facesGrp = new T.Group(); facesGrp.add(fAlas, fAB, fBC, fCD, fDA);
-  const edgesGrp = new T.Group(); edgeLines.forEach(e => edgesGrp.add(e));
+  const edgesGrp = new T.Group();
+  edgeLines.forEach(e => edgesGrp.add(e));
+  glowEdges.forEach(e => edgesGrp.add(e));  // glow cylinder
   const edgeHLGrp = new T.Group(); edgeHL.forEach(e => edgeHLGrp.add(e));
   edgeHLGrp.visible = false;
 
@@ -329,7 +413,7 @@ function buildLimas() {
   grp.add(facesGrp, edgesGrp, edgeHLGrp, vtxGrp, tGrp);
 
   const allFaces  = [fAlas, fAB, fBC, fCD, fDA];
-  const defColors = [clr.alas, ...clr.sisi];
+  const defColors = allFaces.map(() => GLASS_COLOR);
 
   return {
     group: grp, type: 'limas',
@@ -342,21 +426,43 @@ function buildLimas() {
 
     highlight(el) {
       this.resetHL();
+
       if (el === 'alas') {
+        // Redupkan sisi miring
+        [fAB, fBC, fCD, fDA].forEach(f => { f.material.opacity = OPC_DIM; });
+        // Highlight alas
         fAlas.material.color.set(HL_CLR.alas);
-        fAlas.material.emissive.set(0xFF6B6B); fAlas.material.emissiveIntensity = 0.3;
+        fAlas.material.emissive.set(0xFF4444);
+        fAlas.material.emissiveIntensity = 0.5;
+        fAlas.material.opacity = OPC_BRIGHT;
       }
-      if (el === 'tinggi') tGrp.visible = true;
-      if (el === 'rusuk')  edgeHLGrp.visible = true;
-      if (el === 'titik')  vtxGrp.visible = true;
+
+      if (el === 'tinggi') {
+        allFaces.forEach(f => { f.material.opacity = OPC_DIM; });
+        tGrp.visible = true;
+      }
+
+      if (el === 'rusuk') {
+        allFaces.forEach(f => { f.material.opacity = OPC_DIM; });
+        edgeHLGrp.visible = true;
+      }
+
+      if (el === 'titik') {
+        allFaces.forEach(f => { f.material.opacity = OPC_DIM; });
+        vtxGrp.visible = true;
+      }
     },
 
     resetHL() {
       allFaces.forEach((f, i) => {
         f.material.color.set(defColors[i]);
-        f.material.emissive.set(0); f.material.emissiveIntensity = 0;
+        f.material.emissive.set(0);
+        f.material.emissiveIntensity = 0;
+        f.material.opacity = OPC_DEFAULT;
       });
-      edgeHLGrp.visible = false; vtxGrp.visible = false; tGrp.visible = false;
+      edgeHLGrp.visible = false;
+      vtxGrp.visible = false;
+      tGrp.visible = false;
     },
   };
 }
