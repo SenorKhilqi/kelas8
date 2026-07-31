@@ -540,6 +540,8 @@ html, body {
   border-radius: var(--r-md);
   padding: 0.85rem 0.9rem;
   animation: panelIn 0.2s ease both;
+  max-height: 42vh;
+  overflow-y: auto;
 }
 @keyframes panelIn {
   from { opacity: 0; transform: translateY(6px); }

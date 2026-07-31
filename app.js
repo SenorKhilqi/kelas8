@@ -579,6 +579,9 @@ function moveDemoCamera() {
   DC.lookAt(0, -0.4, 0);
 }
 
+let touchStartDist = 0;
+let D_sph_r_start = 0;
+
 function setupDrag(el) {
   // Mouse
   el.addEventListener('mousedown',  e => { D_drag = { on:true, lx: e.clientX, ly: e.clientY }; });
@@ -587,12 +590,32 @@ function setupDrag(el) {
 
   // Touch
   el.addEventListener('touchstart', e => {
-    if (e.touches.length === 1) D_drag = { on:true, lx: e.touches[0].clientX, ly: e.touches[0].clientY };
+    if (e.touches.length === 1) {
+      D_drag = { on:true, lx: e.touches[0].clientX, ly: e.touches[0].clientY };
+    } else if (e.touches.length === 2) {
+      D_drag.on = false;
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      touchStartDist = Math.hypot(dx, dy);
+      D_sph_r_start = D_sph.r;
+    }
     e.preventDefault();
   }, { passive: false });
   el.addEventListener('touchend',   () => { D_drag.on = false; });
   el.addEventListener('touchmove',  e => {
-    if (e.touches.length === 1) handleDragMove(e.touches[0].clientX, e.touches[0].clientY);
+    if (e.touches.length === 1 && D_drag.on) {
+      handleDragMove(e.touches[0].clientX, e.touches[0].clientY);
+    } else if (e.touches.length === 2) {
+      const dx = e.touches[0].clientX - e.touches[1].clientX;
+      const dy = e.touches[0].clientY - e.touches[1].clientY;
+      const dist = Math.hypot(dx, dy);
+      if (touchStartDist > 0) {
+        // As distance increases, r decreases (zoom in)
+        const scale = touchStartDist / dist;
+        D_sph.r = Math.max(0.7, Math.min(4, D_sph_r_start * scale));
+        moveDemoCamera();
+      }
+    }
     e.preventDefault();
   }, { passive: false });
 
@@ -634,37 +657,18 @@ let AM_cur = null;
 let arSceneEl = null;
 
 function initAR() {
-  // Buat a-scene secara dinamis (agar kamera tidak diminta sebelum user klik AR)
-  const scEl = document.createElement('a-scene');
-  scEl.setAttribute('embedded', '');
-  scEl.setAttribute('arjs', 'sourceType:webcam; debugUIEnabled:false; detectionMode:mono_and_matrix; matrixCodeType:3x3;');
-  scEl.setAttribute('renderer', 'antialias:true; alpha:true;');
-  scEl.setAttribute('vr-mode-ui', 'enabled:false');
-  scEl.setAttribute('loading-screen', 'enabled:false');
-  scEl.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;';
+  const cont = document.getElementById('ar-container');
+  cont.innerHTML = `
+    <a-scene embedded arjs="sourceType:webcam; debugUIEnabled:false; detectionMode:mono_and_matrix; matrixCodeType:3x3;" renderer="antialias:true; alpha:true;" vr-mode-ui="enabled:false" loading-screen="enabled:false" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;">
+      <a-marker preset="hiro" smooth="true" smoothCount="10" id="ar-hiro">
+        <a-entity id="ar-model-cnt" rotation="-90 0 0" scale="0.45 0.45 0.45"></a-entity>
+      </a-marker>
+      <a-entity camera></a-entity>
+    </a-scene>
+  `;
+  cont.style.display = 'block';
 
-  // Marker
-  const mkEl = document.createElement('a-marker');
-  mkEl.setAttribute('preset', 'hiro');
-  mkEl.setAttribute('smooth', 'true');
-  mkEl.setAttribute('smoothCount', '10');
-  mkEl.id = 'ar-hiro';
-
-  // Container (diputar sesuai koordinat A-Frame)
-  const ctEl = document.createElement('a-entity');
-  ctEl.id = 'ar-model-cnt';
-  ctEl.setAttribute('rotation', '-90 0 0');
-  ctEl.setAttribute('scale', '0.45 0.45 0.45');
-
-  mkEl.appendChild(ctEl);
-  scEl.appendChild(mkEl);
-
-  const camEl = document.createElement('a-entity');
-  camEl.setAttribute('camera', '');
-  scEl.appendChild(camEl);
-
-  document.getElementById('ar-container').appendChild(scEl);
-  document.getElementById('ar-container').style.display = 'block';
+  const scEl = cont.querySelector('a-scene');
   arSceneEl = scEl;
 
   // Daftarkan ticker agar orientasi ter-animasi
