@@ -631,12 +631,14 @@ function handleDragMove(cx, cy) {
   const dx = cx - D_drag.lx, dy = cy - D_drag.ly;
   D_drag.lx = cx; D_drag.ly = cy;
 
-  if (ST.scene === 2 && DM_cur) {
-    // Scene 2: rotate model langsung
-    DM_cur.group.rotation.y += dx * 0.012;
-    DM_cur.group.rotation.x += dy * 0.012;
-  } else {
-    // Scene lain: orbit camera
+  const curModel = _cur();
+
+  if ((ST.scene === 2 || ST.scene === 3) && curModel) {
+    // Putar model
+    curModel.group.rotation.y += dx * 0.012;
+    curModel.group.rotation.x += dy * 0.012;
+  } else if (ST.mode === 'demo') {
+    // Scene lain (demo): orbit camera
     D_sph.th -= dx * 0.008;
     D_sph.ph  = Math.max(0.2, Math.min(Math.PI - 0.2, D_sph.ph - dy * 0.008));
     moveDemoCamera();
@@ -662,7 +664,7 @@ function initAR() {
   cont.innerHTML = `
     <a-scene embedded arjs="sourceType:webcam; debugUIEnabled:false; detectionMode:mono_and_matrix; matrixCodeType:3x3;" renderer="antialias:true; alpha:true;" vr-mode-ui="enabled:false" loading-screen="enabled:false" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;">
       <a-marker preset="hiro" smooth="true" smoothCount="10" id="ar-hiro">
-        <a-entity id="ar-model-cnt" rotation="-90 0 0" scale="0.45 0.45 0.45"></a-entity>
+        <a-entity id="ar-model-cnt" rotation="-90 0 0" scale="1.0 1.0 1.0"></a-entity>
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
@@ -671,6 +673,9 @@ function initAR() {
 
   const scEl = cont.querySelector('a-scene');
   arSceneEl = scEl;
+
+  // Izinkan touch/drag di dalam container AR
+  setupDrag(cont);
 
   // Daftarkan ticker agar orientasi ter-animasi
   if (!AFRAME.components['lkpd-ticker']) {
@@ -716,17 +721,29 @@ const App = {
     if (!window.isSecureContext) {
       alert("⚠️ PERHATIAN:\nBrowser biasanya memblokir akses kamera jika situs tidak diakses menggunakan HTTPS atau localhost (127.0.0.1).\nJika kamera tidak muncul, silakan gunakan koneksi yang aman.");
     }
-    document.getElementById('overlay-intro').classList.remove('active');
-    document.getElementById('ui-panel').style.display = 'flex';
-    document.getElementById('mode-badge').textContent = 'AR';
+    const intro = document.getElementById('overlay-intro');
+    if (intro) intro.classList.remove('active');
+    
+    const uiPanel = document.getElementById('ui-panel');
+    if (uiPanel) uiPanel.style.display = 'flex';
+    
+    const modeBadge = document.getElementById('mode-badge');
+    if (modeBadge) modeBadge.textContent = 'AR';
+    
     ST.mode = 'ar';
     waitThree(() => initAR());
   },
 
   startDemo() {
-    document.getElementById('overlay-intro').classList.remove('active');
-    document.getElementById('ui-panel').style.display = 'flex';
-    document.getElementById('mode-badge').textContent = 'Demo';
+    const intro = document.getElementById('overlay-intro');
+    if (intro) intro.classList.remove('active');
+    
+    const uiPanel = document.getElementById('ui-panel');
+    if (uiPanel) uiPanel.style.display = 'flex';
+    
+    const modeBadge = document.getElementById('mode-badge');
+    if (modeBadge) modeBadge.textContent = 'Demo';
+    
     ST.mode = 'demo';
     waitThree(() => initDemo());
   },
@@ -775,8 +792,8 @@ const App = {
     // Reset highlight jika pindah dari scene 1
     if (n !== 1) App.resetHighlight();
 
-    // Reset rotasi manual saat keluar dari scene 2
-    if (n !== 2) {
+    // Reset rotasi manual saat kembali ke scene 1
+    if (n === 1) {
       const m = _cur();
       if (m) { m.group.rotation.x = 0; m.group.rotation.y = 0; }
     }
@@ -816,8 +833,8 @@ const App = {
 
     const lbl  = document.getElementById('orient-lbl');
     const icon = document.getElementById('orient-icon');
-    if (ST.isLaid) { lbl.textContent = 'Tegakkan'; icon.textContent = '↕️'; }
-    else           { lbl.textContent = 'Rebahkan'; icon.textContent = '↩️'; }
+    if (ST.isLaid) { lbl.textContent = 'Tegakkan'; icon.innerHTML = '<!-- ↕️ -->'; }
+    else           { lbl.textContent = 'Rebahkan'; icon.innerHTML = '<!-- ↩️ -->'; }
   },
 
   updateNet(val) {
@@ -843,38 +860,7 @@ const App = {
   },
 
   goBack() {
-    if (ST.mode === 'demo') {
-      if (D_raf) cancelAnimationFrame(D_raf);
-      document.getElementById('demo-container').style.display = 'none';
-      // Bersihkan renderer
-      if (DR) { DR.dispose(); DR = null; }
-      DS = null; DC = null; DM = {}; DM_cur = null;
-    }
-    if (ST.mode === 'ar') {
-      if (arSceneEl) { arSceneEl.remove(); arSceneEl = null; }
-      document.getElementById('ar-container').style.display = 'none';
-      document.body.classList.remove('ar-active');
-      AM = {}; AM_cur = null;
-    }
-
-    ST.mode = null; ST.shape = 'prisma'; ST.scene = 1;
-    ST.hl = 'none'; ST.netT = 1; ST.isLaid = false;
-    ST.orientT = 0; ST.orientTarget = 0; ST.orientAnim = false;
-
-    document.getElementById('ui-panel').style.display = 'none';
-    document.getElementById('overlay-intro').classList.add('active');
-
-    // Reset tab & panel
-    [1,2,3].forEach(i => {
-      document.getElementById(`tab-${i}`)?.classList.toggle('active', i === 1);
-      document.getElementById(`panel-${i}`).style.display = i === 1 ? '' : 'none';
-    });
-    document.getElementById('sbtn-prisma').classList.add('active');
-    document.getElementById('sbtn-limas').classList.remove('active');
-    document.getElementById('net-slider').value = 100;
-    document.getElementById('slider-pct').textContent = '100%';
-    document.getElementById('orient-lbl').textContent = 'Rebahkan';
-    document.getElementById('orient-icon').textContent = '↩️';
+    window.location.href = 'index.html';
   },
 };
 
