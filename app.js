@@ -664,7 +664,7 @@ function initAR() {
   cont.innerHTML = `
     <a-scene embedded arjs="sourceType:webcam; debugUIEnabled:false; detectionMode:mono_and_matrix; matrixCodeType:3x3;" renderer="antialias:true; alpha:true;" vr-mode-ui="enabled:false" loading-screen="enabled:false" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;">
       <a-marker preset="hiro" smooth="true" smoothCount="10" id="ar-hiro">
-        <a-entity id="ar-model-cnt" rotation="-90 0 0" scale="1.0 1.0 1.0"></a-entity>
+        <a-entity id="ar-model-cnt" rotation="-90 0 0" scale="2.5 2.5 2.5"></a-entity>
       </a-marker>
       <a-entity camera></a-entity>
     </a-scene>
