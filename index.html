@@ -3,114 +3,162 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>LKPD AR — Bangun Ruang Sisi Datar | Kelas VIII SMP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LKPD Matematika — Bangun Ruang Sisi Datar | Kelas VIII SMP</title>
   <meta name="description"
-    content="LKPD Interaktif berbasis WebAR untuk Prisma Segitiga dan Limas Segiempat — Matematika Kelas VIII SMP">
+    content="Media Pembelajaran Interaktif 3D & Augmented Reality (WebAR) untuk Prisma Segitiga dan Limas Segiempat — Matematika Kelas VIII SMP">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap"
     rel="stylesheet">
-
-  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 
   <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="page-home">
+
+  <main class="hub-container">
+
+    <!-- ── HEADER ── -->
+    <header class="hub-header">
+      <div class="hub-badge">
+        <span class="hub-dot"></span>
+        <span>LKPD Matematika · Kelas VIII SMP</span>
+      </div>
+
+      <h1 class="hub-title">Bangun Ruang Sisi Datar</h1>
+
+      <p class="hub-desc">
+        Media pembelajaran interaktif berbasis <strong>3D &amp; Augmented Reality</strong> untuk mengeksplorasi jaring-jaring, orientasi, serta panduan menggambar stereometri.
+      </p>
+
+      <div class="hub-author">
+        <span>Disusun oleh: <strong>Irdina Afza Wafiqoh</strong></span>
+      </div>
+    </header>
+
+    <!-- ── SECTION 01: SIMULASI 3D & AR ── -->
+    <section class="hub-section">
+      <div class="section-label">
+        <span class="label-idx">01</span>
+        <h3>Simulasi Interaktif (3D &amp; WebAR)</h3>
+      </div>
+
+      <div class="hub-grid">
+        <!-- Card 1: Mode Demo 3D -->
+        <a href="demo.html" class="hub-card primary-card">
+          <div class="card-icon-wrap primary">
+            <span class="card-icon">🖥️</span>
+          </div>
+          <div class="card-content">
+            <div class="card-top">
+              <span class="card-tag">Rekomendasi Cepat</span>
+              <h4>Mode Eksplorasi 3D</h4>
+            </div>
+            <p>Jelajahi model Prisma &amp; Limas langsung di browser tanpa kamera. Putar 360°, amati unsur-unsur, dan buka tutup jaring-jaring.</p>
+            <span class="card-arrow">Buka Simulasi 3D &rarr;</span>
+          </div>
+        </a>
+
+        <!-- Card 2: Mode AR -->
+        <a href="ar.html" class="hub-card">
+          <div class="card-icon-wrap">
+            <span class="card-icon">📷</span>
+          </div>
+          <div class="card-content">
+            <div class="card-top">
+              <span class="card-tag neutral">Kamera Realitas</span>
+              <h4>Augmented Reality (AR)</h4>
+            </div>
+            <p>Munculkan bangun ruang 3D secara nyata di atas meja belajar Anda menggunakan kamera perangkat dan marker Hiro.</p>
+            <span class="card-arrow">Buka Kamera AR &rarr;</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ── SECTION 02: PANDUAN MENGGAMBAR STEREOMETRI ── -->
+    <section class="hub-section">
+      <div class="section-label">
+        <span class="label-idx">02</span>
+        <h3>Panduan Menggambar Stereometri</h3>
+      </div>
+
+      <div class="hub-grid">
+        <!-- Card 3: Prisma Segitiga -->
+        <a href="panduan-prisma.html" class="hub-card guide-card">
+          <div class="card-icon-wrap prisma">
+            <span class="card-icon">🔷</span>
+          </div>
+          <div class="card-content">
+            <div class="card-top">
+              <span class="card-tag prisma">Skala 8 cm &times; 30 cm</span>
+              <h4>Prisma Segitiga ABC.DEF</h4>
+            </div>
+            <p>Simulasi animasi pensil &amp; mistar cara menggambar proyeksi 3D prisma segitiga di kertas berpetak langkah demi langkah.</p>
+            <span class="card-arrow">Lihat Panduan Prisma &rarr;</span>
+          </div>
+        </a>
+
+        <!-- Card 4: Limas Segiempat -->
+        <a href="panduan-limas.html" class="hub-card guide-card">
+          <div class="card-icon-wrap limas">
+            <span class="card-icon">🔺</span>
+          </div>
+          <div class="card-content">
+            <div class="card-top">
+              <span class="card-tag limas">Skala 8 cm &times; 10 cm</span>
+              <h4>Limas Segiempat T.ABCD</h4>
+            </div>
+            <p>Teknik menarik alas jajar genjang, diagonal bantu, titik pusat O, serta garis tinggi tegak lurus menuju puncak T.</p>
+            <span class="card-arrow">Lihat Panduan Limas &rarr;</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ── FOOTER & MARKER MODAL TRIGGER ── -->
+    <footer class="hub-footer">
+      <button class="hub-marker-btn" onclick="App.showMarker()">
+        <span>📋</span>
+        <span>Lihat &amp; Cetak Marker Hiro AR</span>
+      </button>
+      <div class="hub-credits">
+        <span>Media Pembelajaran Matematika SMP Kelas VIII · Berbasis WebAR &amp; 3D</span>
+      </div>
+    </footer>
+
+  </main>
 
   <!-- ════════════════════════════════════════
-     INTRO OVERLAY
-════════════════════════════════════════ -->
-  <div id="overlay-intro" class="overlay active">
-    <div class="overlay-bg"></div>
-
-    <div class="intro-card glass">
-
-      <!-- Header -->
-      <div class="intro-header">
-        <div class="intro-logo"><!-- 📐 --></div>
-        <div class="intro-brand">
-          <span class="brand-tag">LKPD Interaktif WebAR</span>
-          <h1>Bangun Ruang</h1>
-          <h2>Irdina Afza Wafiqoh</h2>
-        </div>
-      </div>
-
-      <!-- Subtitle -->
-      <div class="intro-body">
-        <h2>Prisma Segitiga &amp; Limas Segiempat</h2>
-        <div class="grade-pill">📚 Matematika · Kelas VIII SMP</div>
-      </div>
-
-      <!-- Feature Tags -->
-      <div class="intro-features">
-        <div class="feat"><!-- 🔍 --> <span>Unsur-unsur</span></div>
-        <div class="feat"><!-- ↔️ --> <span>Orientasi</span></div>
-        <div class="feat"><!-- 📐 --> <span>Jaring-jaring</span></div>
-        <div class="feat"><span>✏️</span> <span>Cara Menggambar</span></div>
-      </div>
-
-      <!-- CTA Buttons -->
-      <div class="intro-actions">
-        <button class="btn-primary" id="btn-start-ar" onclick="window.location.href='ar.html'">
-          <span class="btn-icon"><!-- 📷 --></span>
-          <span class="btn-texts">
-            <span class="btn-title">Mulai dengan AR</span>
-            <span class="btn-sub">Butuh marker Hiro + kamera</span>
-          </span>
-        </button>
-        <button class="btn-secondary" id="btn-start-demo" onclick="window.location.href='demo.html'">
-          <span class="btn-icon"><!-- 🖥️ --></span>
-          <span class="btn-texts">
-            <span class="btn-title">Mode Demo</span>
-            <span class="btn-sub">Tanpa kamera, langsung jelajahi</span>
-          </span>
-        </button>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; width: 100%;">
-          <button class="btn-secondary" id="btn-guide-prisma" onclick="window.location.href='panduan-prisma.html'" style="border-color: rgba(78, 205, 196, 0.4); background: rgba(78, 205, 196, 0.1); padding: 0.75rem 0.6rem;">
-            <span class="btn-icon">🔷</span>
-            <span class="btn-texts">
-              <span class="btn-title" style="font-size:0.88rem;">Gambar Prisma</span>
-              <span class="btn-sub" style="font-size:0.72rem;">Prisma Segitiga ABC.DEF</span>
-            </span>
-          </button>
-          <button class="btn-secondary" id="btn-guide-limas" onclick="window.location.href='panduan-limas.html'" style="border-color: rgba(255, 107, 107, 0.4); background: rgba(255, 107, 107, 0.1); padding: 0.75rem 0.6rem;">
-            <span class="btn-icon">🔺</span>
-            <span class="btn-texts">
-              <span class="btn-title" style="font-size:0.88rem;">Gambar Limas</span>
-              <span class="btn-sub" style="font-size:0.72rem;">Limas Segiempat T.ABCD</span>
-            </span>
-          </button>
-        </div>
-      </div>
-
-      <button class="btn-link" onclick="App.showMarker()"><!-- 📋 --> Tampilkan Marker Hiro</button>
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════════
-     MARKER MODAL
-════════════════════════════════════════ -->
+     MARKER MODAL (MINIMALIST & CLEAN)
+  ════════════════════════════════════════ -->
   <div id="modal-marker" class="modal-backdrop" onclick="App.hideMarker()">
-    <div class="modal-card glass" onclick="event.stopPropagation()">
-      <div class="modal-top">
-        <h3>Marker Hiro</h3>
-        <button class="modal-close" onclick="App.hideMarker()">✕</button>
+    <div class="modal-card-clean" onclick="event.stopPropagation()">
+      <div class="modal-top-clean">
+        <div class="modal-title-wrap">
+          <h4>Marker Hiro AR</h4>
+          <span class="modal-sub">Gunakan gambar ini untuk memunculkan objek 3D</span>
+        </div>
+        <button class="modal-close-btn" onclick="App.hideMarker()" aria-label="Tutup">✕</button>
       </div>
-      <p>Cetak atau tampilkan gambar ini, lalu arahkan kamera ke marker.</p>
-      <div class="marker-wrap">
+
+      <div class="marker-box-clean">
         <img id="hiro-img" src="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png"
-          alt="Hiro AR Marker" class="marker-img"
+          alt="Hiro AR Marker" class="marker-img-clean"
           onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect width=%22200%22 height=%22200%22 fill=%22%23fff%22/><rect x=%2210%22 y=%2210%22 width=%22180%22 height=%22180%22 fill=%22%23000%22/><rect x=%2225%22 y=%2225%22 width=%22150%22 height=%22150%22 fill=%22%23fff%22/><rect x=%2240%22 y=%2240%22 width=%22120%22 height=%22120%22 fill=%22%23000%22/><rect x=%2260%22 y=%2260%22 width=%2280%22 height=%2280%22 fill=%22%23fff%22/><rect x=%2278%22 y=%2278%22 width=%2244%22 height=%2244%22 fill=%22%23000%22/></svg>'">
       </div>
-      <p class="marker-tip"><!-- 💡 --> Ideal: cetak 8 × 8 cm atau lebih besar</p>
-      <button class="btn-secondary sm" onclick="App.hideMarker()">Tutup</button>
+
+      <div class="marker-instructions">
+        <p>💡 <strong>Petunjuk:</strong> Arahkan kamera HP ke marker ini (bisa dicetak atau dibuka di layar perangkat lain).</p>
+      </div>
+
+      <div class="modal-actions-clean">
+        <button class="btn-clean primary" onclick="App.hideMarker()">Selesai &amp; Tutup</button>
+      </div>
     </div>
   </div>
-
-  <!-- Containers removed, now in ar.html and demo.html -->
 
   <script src="app.js"></script>
 </body>
