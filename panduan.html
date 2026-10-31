@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pilih Panduan Menggambar Bangun Ruang | LKPD Kelas VIII</title>
+  <script>
+    // Redirect otomatis jika ada query param ?shape=
+    const params = new URLSearchParams(window.location.search);
+    const shape = params.get('shape');
+    if (shape === 'limas') {
+      window.location.replace('panduan-limas.html');
+    } else {
+      window.location.replace('panduan-prisma.html');
+    }
+  </script>
+</head>
+<body style="background:#0d0d1a; color:#fff; font-family:sans-serif; text-align:center; padding-top:4rem;">
+  <h2>Memuat Panduan Menggambar Bangun Ruang...</h2>
+  <p><a href="panduan-prisma.html" style="color:#4ECDC4;">Klik di sini untuk Prisma Segitiga</a> atau <a href="panduan-limas.html" style="color:#FF6B6B;">Klik di sini untuk Limas Segiempat</a></p>
+</body>
+</html>

@@ -109,7 +109,8 @@
 
     <!-- Bottom Bar -->
     <div class="bottom-bar">
-      <button class="btn-back" onclick="App.goBack()">← Kembali</button>
+      <button class="btn-back" onclick="App.goBack()">← Beranda</button>
+      <button class="btn-back" onclick="App.openGuide()" style="color:var(--teal); border-color:rgba(78, 205, 196, 0.35);">✏️ Cara Menggambar</button>
       <span class="app-credit">LKPD AR · Kelas VIII SMP</span>
     </div>
 
@@ -119,6 +120,15 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       App.startDemo();
+      const params = new URLSearchParams(window.location.search);
+      const qShape = params.get('shape');
+      const qScene = parseInt(params.get('scene'));
+      if (qShape && (qShape === 'prisma' || qShape === 'limas')) {
+        setTimeout(() => App.switchShape(qShape), 250);
+      }
+      if (qScene && [1, 2, 3].includes(qScene)) {
+        setTimeout(() => App.switchScene(qScene), 350);
+      }
     });
   </script>
 </body>

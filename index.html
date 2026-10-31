@@ -49,6 +49,7 @@
         <div class="feat"><!-- 🔍 --> <span>Unsur-unsur</span></div>
         <div class="feat"><!-- ↔️ --> <span>Orientasi</span></div>
         <div class="feat"><!-- 📐 --> <span>Jaring-jaring</span></div>
+        <div class="feat"><span>✏️</span> <span>Cara Menggambar</span></div>
       </div>
 
       <!-- CTA Buttons -->
@@ -67,6 +68,22 @@
             <span class="btn-sub">Tanpa kamera, langsung jelajahi</span>
           </span>
         </button>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; width: 100%;">
+          <button class="btn-secondary" id="btn-guide-prisma" onclick="window.location.href='panduan-prisma.html'" style="border-color: rgba(78, 205, 196, 0.4); background: rgba(78, 205, 196, 0.1); padding: 0.75rem 0.6rem;">
+            <span class="btn-icon">🔷</span>
+            <span class="btn-texts">
+              <span class="btn-title" style="font-size:0.88rem;">Gambar Prisma</span>
+              <span class="btn-sub" style="font-size:0.72rem;">Prisma Segitiga ABC.DEF</span>
+            </span>
+          </button>
+          <button class="btn-secondary" id="btn-guide-limas" onclick="window.location.href='panduan-limas.html'" style="border-color: rgba(255, 107, 107, 0.4); background: rgba(255, 107, 107, 0.1); padding: 0.75rem 0.6rem;">
+            <span class="btn-icon">🔺</span>
+            <span class="btn-texts">
+              <span class="btn-title" style="font-size:0.88rem;">Gambar Limas</span>
+              <span class="btn-sub" style="font-size:0.72rem;">Limas Segiempat T.ABCD</span>
+            </span>
+          </button>
+        </div>
       </div>
 
       <button class="btn-link" onclick="App.showMarker()"><!-- 📋 --> Tampilkan Marker Hiro</button>

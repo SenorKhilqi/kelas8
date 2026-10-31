@@ -862,6 +862,10 @@ const App = {
   goBack() {
     window.location.href = 'index.html';
   },
+
+  openGuide() {
+    window.location.href = (ST.shape === 'limas') ? 'panduan-limas.html' : 'panduan-prisma.html';
+  },
 };
 
 /* ═══════════════════════════════════════════════════════════

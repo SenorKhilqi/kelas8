@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panduan Menggambar Prisma Segitiga ABC.DEF | LKPD Kelas VIII</title>
+  <meta name="description"
+    content="Panduan langkah demi langkah cara menggambar representasi 3D Prisma Segitiga ABC.DEF pada buku berpetak/kertas gambar — Matematika Kelas VIII SMP">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="panduan.css">
+  <script src="three.min.js"></script>
+</head>
+
+<body class="page-panduan">
+
+  <!-- Background Animated Orbs -->
+  <div class="panduan-bg"></div>
+
+  <div class="panduan-container">
+
+    <!-- ════════════════════════════════════════
+       TOP STICKY NAVBAR
+  ════════════════════════════════════════ -->
+    <header class="panduan-nav">
+      <div class="nav-left">
+        <a href="index.html" class="btn-nav-back">← Beranda</a>
+        <div class="nav-brand">
+          <span>📐 LKPD Matematika</span>
+          <span class="nav-badge">Kelas VIII SMP</span>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a href="panduan-limas.html" class="nav-btn-link" style="border-color: rgba(255, 107, 107, 0.4); background: rgba(255, 107, 107, 0.12); color: #FF8585;" title="Buka panduan limas segiempat">🔺 Buka Panduan Limas</a>
+        <a href="demo.html?shape=prisma" class="nav-btn-link" title="Jelajahi model 3D">🖥️ Demo 3D</a>
+        <a href="ar.html" class="nav-btn-link teal" title="Eksplorasi kamera AR">📷 Mode AR</a>
+        <button class="nav-btn-link" onclick="PrismaGuide.printGuide()" title="Cetak panduan menggambar">🖨️ Cetak</button>
+      </div>
+    </header>
+
+    <!-- ════════════════════════════════════════
+       HERO BANNER
+  ════════════════════════════════════════ -->
+    <section class="panduan-hero glass">
+      <div class="hero-pill">✏️ Panduan Geometri 3D · Bangun Ruang Sisi Datar</div>
+      <h1>Langkah &amp; Cara Menggambar <br><span class="gradient-text">Prisma Segitiga ABC.DEF</span></h1>
+      <p class="hero-desc">
+        Panduan langkah demi langkah menggambar bangun ruang Prisma Segitiga ABC.DEF pada buku tulis berpetak sesuai gambar soal.
+        Kuasai kaidah rusuk tampak (garis tebal utuh) dan rusuk tersembunyi (garis putus-putus) secara presisi dan terukur.
+      </p>
+
+      <!-- Shape Switcher Link Bar -->
+      <div class="shape-tab-wrapper">
+        <div class="shape-tab-bar">
+          <a href="panduan-prisma.html" class="guide-shape-btn active" style="text-decoration:none;">
+            <span>🔷</span>
+            <span>Prisma Segitiga ABC.DEF (Aktif)</span>
+          </a>
+          <a href="panduan-limas.html" class="guide-shape-btn" style="text-decoration:none;">
+            <span>🔺</span>
+            <span>Buka Limas Segiempat T.ABCD →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+       ANIMATION STUDIO: SIMULASI MENGGAMBAR PRISMA
+  ════════════════════════════════════════ -->
+    <section class="guide-section glass anim-studio-section" id="anim-studio">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sec-icon coral">🎬</div>
+          <div>
+            <h2 class="section-title">Simulasi Animasi: Tahapan Menggambar Prisma ABC.DEF</h2>
+            <p class="section-sub">Saksikan pensil dan penggaris menggambar rusuk demi rusuk pada buku berpetak: dari alas, rusuk tegak, hingga tutup DEF</p>
+          </div>
+        </div>
+        <div class="anim-actions-group">
+          <button class="anim-speed-btn" data-speed="0.5">0.5×</button>
+          <button class="anim-speed-btn active" data-speed="1">1×</button>
+          <button class="anim-speed-btn" data-speed="2">2×</button>
+          <button class="btn-nav-back" id="anim-btn-reset">🔄 Ulangi</button>
+        </div>
+      </div>
+
+      <!-- Stage Selector Tabs (1 to 5) -->
+      <div class="anim-stages-selector">
+        <button class="anim-stage-btn active" id="anim-stage-btn-1">
+          <span>📐</span> <span>1. Bidang Alas</span>
+        </button>
+        <button class="anim-stage-btn" id="anim-stage-btn-2">
+          <span>📏</span> <span>2. Tiga Rusuk Tegak</span>
+        </button>
+        <button class="anim-stage-btn" id="anim-stage-btn-3">
+          <span>✏️</span> <span>3. Tutup DEF</span>
+        </button>
+        <button class="anim-stage-btn" id="anim-stage-btn-4">
+          <span>🔍</span> <span>4. Garis Putus-Putus</span>
+        </button>
+        <button class="anim-stage-btn" id="anim-stage-btn-5">
+          <span>✨</span> <span>5. Notasi Titik &amp; 3D</span>
+        </button>
+      </div>
+
+      <!-- Animation Viewport Screen -->
+      <div class="anim-stage-container">
+        <div class="anim-viewport-wrap">
+          <canvas id="anim-canvas-2d"></canvas>
+          <div id="anim-canvas-3d-wrap"></div>
+        </div>
+        <div class="anim-overlay-hint" id="anim-hint-badge">
+          <span>💡 Seret untuk putar 3D (pada tahap 5) untuk melihat perspektif dari berbagai sudut</span>
+        </div>
+      </div>
+
+      <!-- Timeline & Playback Scrubber -->
+      <div class="anim-controls-wrap">
+        <div class="anim-scrubber-row">
+          <input type="range" id="anim-scrubber" class="anim-scrubber" min="0" max="100" value="0">
+          <span class="anim-pct-badge" id="anim-pct-label">0%</span>
+        </div>
+        <div class="anim-buttons-row">
+          <button class="anim-btn-play" id="anim-btn-play">
+            <span>▶️ Putar Animasi</span>
+          </button>
+          <span style="font-size:0.75rem; color:var(--muted);">Geser slider untuk melihat penarikan setiap rusuk tahap demi tahap</span>
+        </div>
+      </div>
+
+      <!-- Dynamic Story & Explanation Card -->
+      <div class="anim-story-card">
+        <div class="anim-story-header">
+          <span class="anim-story-badge" id="anim-story-badge">Tahap 1 dari 5</span>
+          <span style="font-size:0.75rem; color:var(--gold);">Live Drafting Guide</span>
+        </div>
+        <h4 class="anim-story-title" id="anim-story-title">📐 1. Menggambar Bidang Alas</h4>
+        <p class="anim-story-desc" id="anim-story-desc">
+          Menggambar rusuk alas depan BC secara horizontal dengan garis tebal nyata, lalu menarik garis miring ke belakang dengan garis putus-putus untuk rusuk AC dan AB yang tersembunyi.
+        </p>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+       BAGIAN 1: ALAT & MEDIA MENGGAMBAR
+  ════════════════════════════════════════ -->
+    <section class="guide-section glass">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sec-icon teal">✏️</div>
+          <div>
+            <h2 class="section-title">Peralatan untuk Menggambar Bangun Ruang</h2>
+            <p class="section-sub">Siapkan alat tulis geometri berikut sebelum mulai menggambar di buku tugas</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-emoji">✏️</div>
+          <div class="tool-info">
+            <h4>Pensil 2B &amp; Penghapus</h4>
+            <p>Untuk membuat garis sketsa dan garis bantu tipis agar mudah dirapikan saat menentukan titik sudut.</p>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-emoji">📏</div>
+          <div class="tool-info">
+            <h4>Penggaris Mistar 20–30 cm</h4>
+            <p>Wajib digunakan agar seluruh rusuk prisma tegak lurus, sejajar vertikal, dan ukurannya terukur teliti.</p>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-emoji">📓</div>
+          <div class="tool-info">
+            <h4>Buku Tulis Berpetak (Grid Paper)</h4>
+            <p>Sangat dianjurkan! Garis petak membantu menjaga rusuk tegak lurus dan memudahkan kemiringan rusuk ortogonal.</p>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-emoji">🖊️</div>
+          <div class="tool-info">
+            <h4>Drawing Pen (0.3–0.5 mm)</h4>
+            <p>Untuk menegaskan garis rusuk nyata tampak depan setelah konstruksi pensil selesai dipastikan benar.</p>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-emoji">📐</div>
+          <div class="tool-info">
+            <h4>Busur Derajat</h4>
+            <p>Untuk memastikan rusuk tegak membentuk sudut 90° siku-siku terhadap garis horizontal alas BC.</p>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-emoji">⭕</div>
+          <div class="tool-info">
+            <h4>Jangka Geometri</h4>
+            <p>Digunakan untuk memastikan panjang kaki rusuk segitiga sama kaki AB dan AC sama persis (5 cm).</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kaidah Emas Menggambar Bangun Ruang -->
+      <div class="tip-box" style="border-color: rgba(255, 217, 61, 0.4); background: rgba(255, 217, 61, 0.08);">
+        <div class="tip-icon">⭐</div>
+        <div class="tip-text">
+          <h5 style="color: var(--gold);">4 Kaidah Emas Menggambar Bangun Ruang (Stereometri SMP):</h5>
+          <ul style="margin: 0.4rem 0 0 1.2rem; line-height: 1.6; font-size: 0.88rem;">
+            <li><strong>1. Rusuk Tampak (Garis Nyata / Solid Line):</strong> Garis utuh tebal untuk rusuk yang terlihat langsung oleh mata dari arah depan (rusuk BC, CF, BE, EF, FD, ED).</li>
+            <li><strong>2. Rusuk Terhalang (Garis Putus-Putus / Dashed Line):</strong> Wajib untuk rusuk di dinding belakang yang tersembunyi (rusuk AC, AB, dan rusuk tegak AD).</li>
+            <li><strong>3. Bidang Frontal:</strong> Bidang depan BCEF sejajar pengamat, rusuk tegaknya vertikal sejajar murni.</li>
+            <li><strong>4. Penamaan Titik Sudut:</strong> Huruf kapital teratur berlawanan jarum jam: alas (A, B, C) dan tutup (D, E, F).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+       BAGIAN 2: GAMBAR ACUAN SOAL PRISMA
+  ════════════════════════════════════════ -->
+    <section class="guide-section glass" style="border: 1px solid rgba(78, 205, 196, 0.4); background: rgba(78, 205, 196, 0.05);">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sec-icon teal">📷</div>
+          <div>
+            <h2 class="section-title">Gambar Acuan Model: Prisma Segitiga ABC.DEF</h2>
+            <p class="section-sub">Panduan menggambar mengacu persis pada spesifikasi titik dan notasi ukuran gambar ini</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1.75rem; align-items: center; flex-wrap: wrap;">
+        <!-- Gambar Ref Asli Sesuai Permintaan -->
+        <div style="background: rgba(255, 255, 255, 0.96); padding: 1rem; border-radius: var(--r-lg); box-shadow: 0 8px 30px rgba(0,0,0,0.5); text-align: center; flex: 0 0 230px; margin: 0 auto;">
+          <img src="prisma-ref.png" alt="Gambar Acuan Prisma Segitiga ABC.DEF" style="max-width: 100%; height: auto; display: block; border-radius: 8px;">
+          <span style="font-size: 0.75rem; color: #111; font-weight: 800; margin-top: 0.5rem; display: block;">Prisma Segitiga ABC.DEF</span>
+        </div>
+
+        <!-- Rincian Data Ukuran -->
+        <div style="flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 0.85rem;">
+          <h4 style="color: var(--gold); font-size: 1.15rem; font-weight: 800;">Spesifikasi &amp; Data Ukuran Berdasarkan Gambar:</h4>
+          <ul style="font-size: 0.9rem; line-height: 1.65; margin-left: 1.3rem; color: var(--text);">
+            <li><strong>Titik Sudut Bidang Alas (Bawah):</strong> Titik <code>C</code> (kiri depan), <code>B</code> (kanan depan), <code>A</code> (tengah belakang).</li>
+            <li><strong>Titik Sudut Bidang Tutup (Atas):</strong> Titik <code>F</code> (kiri atas), <code>E</code> (kanan atas), <code>D</code> (tengah belakang atas).</li>
+            <li><strong>Rusuk Alas Depan (Garis Nyata):</strong> <code>BC = 8 cm</code> (dan rusuk tutup depan <code>EF = 8 cm</code>).</li>
+            <li><strong>Rusuk Samping Alas (Garis Putus-Putus):</strong> <code>AB = 5 cm</code> dan <code>AC = 5 cm</code> (kaki segitiga sama kaki).</li>
+            <li><strong>Tinggi Prisma (Rusuk Tegak):</strong> <code>AD = BE = CF = 30 cm</code> (BE dan CF tampak nyata, AD putus-putus).</li>
+            <li><strong>Tinggi Segitiga Alas:</strong> <code>h = √(5² - 4²) = 3 cm</code>.</li>
+            <li><strong>Skala Menggambar di Buku Tulis:</strong> Gunakan <strong>skala 1:2</strong> (tinggi gambar 15 cm, rusuk depan 4 cm, rusuk kaki 2.5 cm) agar pas di satu halaman buku.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+       BAGIAN 3: DIAGRAM VEKTOR PERSPEKTIF 3D PRISMA
+  ════════════════════════════════════════ -->
+    <section class="guide-section glass">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sec-icon">📐</div>
+          <div>
+            <h2 class="section-title">Diagram Perspektif 3D: Prisma Segitiga ABC.DEF</h2>
+            <p class="section-sub">Perhatikan keselarasan garis nyata di depan dan garis putus-putus di dinding belakang</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="diagram-container">
+        <div class="diagram-box">
+          <svg viewBox="0 0 760 520" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="prism-front-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#4ECDC4" stop-opacity="0.25"/>
+                <stop offset="100%" stop-color="#6C63FF" stop-opacity="0.18"/>
+              </linearGradient>
+              <linearGradient id="prism-top-fill" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#FFD93D" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#FF6B6B" stop-opacity="0.15"/>
+              </linearGradient>
+            </defs>
+
+            <!-- 1. Bidang Tutup Atas (DEF) - Shading Ringan -->
+            <polygon points="240,140 520,140 380,80" fill="url(#prism-top-fill)" />
+
+            <!-- 2. Bidang Sisi Tegak Depan (BCEF) - Shading Ringan -->
+            <polygon points="240,140 520,140 520,420 240,420" fill="url(#prism-front-fill)" />
+
+            <!-- ── RUSUK-RUSUK TERSEMBUNYI (PUTUS-PUTUS / DASHED) ── -->
+            <!-- Rusuk Alas Belakang AC dan AB (Titik A naik di atas garis BC sesuai gambar acuan) -->
+            <line x1="240" y1="420" x2="380" y2="355" stroke="#FFD93D" stroke-width="2.5" stroke-dasharray="7,5" />
+            <line x1="520" y1="420" x2="380" y2="355" stroke="#FFD93D" stroke-width="2.5" stroke-dasharray="7,5" />
+
+            <!-- Rusuk Tegak Belakang AD (Vertikal lurus dari Titik A ke Titik D) -->
+            <line x1="380" y1="355" x2="380" y2="80" stroke="#FF6B6B" stroke-width="2.5" stroke-dasharray="7,5" />
+
+            <!-- ── RUSUK-RUSUK TAMPAK (TEBAL UTUH / SOLID) ── -->
+            <!-- Rusuk Alas Depan BC -->
+            <line x1="240" y1="420" x2="520" y2="420" stroke="#00FFEE" stroke-width="3.5" />
+
+            <!-- Rusuk Tegak Depan CF dan BE -->
+            <line x1="240" y1="420" x2="240" y2="140" stroke="#00FFEE" stroke-width="3.5" />
+            <line x1="520" y1="420" x2="520" y2="140" stroke="#00FFEE" stroke-width="3.5" />
+
+            <!-- Rusuk Tutup Atas EF, DF, DE -->
+            <line x1="240" y1="140" x2="520" y2="140" stroke="#00FFEE" stroke-width="3.5" />
+            <line x1="240" y1="140" x2="380" y2="80"  stroke="#00FFEE" stroke-width="3.5" />
+            <line x1="520" y1="140" x2="380" y2="80"  stroke="#00FFEE" stroke-width="3.5" />
+
+            <!-- ── LABEL DIMENSI UKURAN PERSIS SEPERTI GAMBAR ── -->
+            <!-- Ukuran BC = 8 cm di bawah rusuk BC -->
+            <text x="380" y="445" fill="#FFFFFF" font-size="14" font-weight="800" text-anchor="middle">8 cm</text>
+
+            <!-- Ukuran AB = 5 cm di dekat rusuk AB miring naik -->
+            <text x="455" y="380" fill="#FFFFFF" font-size="13" font-weight="700">5 cm</text>
+
+            <!-- Ukuran BE = 30 cm di samping kanan rusuk BE -->
+            <text x="540" y="285" fill="#FFFFFF" font-size="14" font-weight="800">30 cm</text>
+
+            <!-- ── TITIK-TITIK SUDUT (VERTICES) ── -->
+            <!-- Alas C, B, A (Titik A naik di atas garis BC) -->
+            <circle cx="240" cy="420" r="5" fill="#00FFEE" />
+            <text x="218" y="435" fill="#FFFFFF" font-size="16" font-weight="800">C</text>
+
+            <circle cx="520" cy="420" r="5" fill="#00FFEE" />
+            <text x="532" y="435" fill="#FFFFFF" font-size="16" font-weight="800">B</text>
+
+            <circle cx="380" cy="355" r="5" fill="#FFD93D" />
+            <text x="362" y="360" fill="#FFFFFF" font-size="16" font-weight="800">A</text>
+
+            <!-- Tutup F, E, D -->
+            <circle cx="240" cy="140" r="5" fill="#00FFEE" />
+            <text x="218" y="135" fill="#FFFFFF" font-size="16" font-weight="800">F</text>
+
+            <circle cx="520" cy="140" r="5" fill="#00FFEE" />
+            <text x="532" y="135" fill="#FFFFFF" font-size="16" font-weight="800">E</text>
+
+            <circle cx="380" cy="80"  r="5" fill="#FF6B6B" />
+            <text x="380" y="65"  fill="#FFFFFF" font-size="16" font-weight="800" text-anchor="middle">D</text>
+
+            <!-- Keterangan Legend Kotak -->
+            <rect x="560" y="320" width="180" height="80" rx="8" fill="rgba(18, 18, 43, 0.9)" stroke="rgba(255,255,255,0.15)"/>
+            <text x="572" y="342" fill="#00FFEE" font-size="11" font-weight="700">─── Rusuk Nyata Tampak</text>
+            <text x="572" y="364" fill="#FFD93D" font-size="11" font-weight="700">- - - Rusuk Putus-Putus (AC, AB, AD)</text>
+            <text x="572" y="386" fill="#E2E2F0" font-size="10">Prisma Segitiga ABC.DEF</text>
+          </svg>
+        </div>
+
+        <div class="diagram-legend">
+          <div class="legend-item">
+            <span class="legend-line" style="background:#00FFEE; height:3px;"></span>
+            <span>Garis Nyata / Utuh (BC, CF, BE, EF, FD, ED)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-line line-fold"></span>
+            <span>Garis Putus-Putus Terhalang (AC, AB, AD)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-swatch" style="background: rgba(78, 205, 196, 0.25); border: 1px solid #4ECDC4;"></span>
+            <span>Bidang Depan BCEF</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-swatch" style="background: rgba(255, 217, 61, 0.25); border: 1px solid #FFD93D;"></span>
+            <span>Bidang Tutup DEF</span>
+          </div>
+        </div>
+
+        <div class="diagram-footer-actions">
+          <a href="demo.html?shape=prisma&scene=1" class="btn-action-pill primary">
+            <span>🧊</span>
+            <span>Lihat Model 3D Prisma Interaktif</span>
+          </a>
+          <button onclick="PrismaGuide.printGuide()" class="btn-action-pill outline">
+            <span>🖨️</span>
+            <span>Cetak Panduan Prisma Ini</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+       BAGIAN 4: LANGKAH DEMI LANGKAH MENGGAMBAR PRISMA
+  ════════════════════════════════════════ -->
+    <section class="guide-section glass">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sec-icon gold">📝</div>
+          <div>
+            <h2 class="section-title">Langkah-Langkah Menggambar Prisma Segitiga ABC.DEF</h2>
+            <p class="section-sub">Panduan 6 tahap terstruktur menggambar perspektif 3D prisma segitiga di buku tulismu</p>
+          </div>
+        </div>
+        <button class="btn-nav-back" onclick="PrismaGuide.resetChecklist()">🔄 Reset Centang</button>
+      </div>
+
+      <!-- Progress Bar Tracker -->
+      <div class="progress-container">
+        <div class="progress-meta">
+          <span>Kemajuan Menggambar Prisma ABC.DEF:</span>
+          <span class="count" id="progress-text-prisma">0 dari 6 Langkah Selesai (0%)</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-bar-prisma"></div>
+        </div>
+      </div>
+
+      <div class="steps-list">
+
+        <!-- Step 1 -->
+        <div class="step-card" data-step-id="p-step-1">
+          <div class="step-header">
+            <div class="step-badge-wrap">
+              <div class="step-num">01</div>
+              <h3 class="step-title">Tentukan Skala Ukuran pada Buku Tulis</h3>
+            </div>
+            <button class="step-check-btn"><span>Tandai Selesai</span></button>
+          </div>
+          <div class="step-body">
+            <p>
+              Karena tinggi prisma asli pada soal cukup besar yaitu <code>30 cm</code>, gunakan skala pengecilan yang pas di satu halaman buku:
+            </p>
+            <ul>
+              <li><strong>Skala 1:2 (Sangat Disarankan):</strong> Rusuk depan <code>BC = 4 cm</code>, rusuk kaki <code>AB = AC = 2.5 cm</code>, dan tinggi prisma <code>t = 15 cm</code>.</li>
+              <li><strong>Skala Petak (Buku Berpetak 0.5 cm):</strong> Tarik 8 kotak mendatar untuk rusuk depan BC, dan 30 kotak vertikal ke atas untuk tinggi prisma.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-card" data-step-id="p-step-2">
+          <div class="step-header">
+            <div class="step-badge-wrap">
+              <div class="step-num">02</div>
+              <h3 class="step-title">Gambar Rusuk Alas Depan (Garis Nyata BC)</h3>
+            </div>
+            <button class="step-check-btn"><span>Tandai Selesai</span></button>
+          </div>
+          <div class="step-body">
+            <ol>
+              <li>Gunakan penggaris lurus di bagian bawah buku gambar.</li>
+              <li>Tarik garis horizontal mendatar sepanjang <strong>8 cm</strong> (atau sesuai skala).</li>
+              <li>Beri nama titik ujung kiri dengan huruf kapital <strong>C</strong> dan titik ujung kanan dengan huruf <strong>B</strong>.</li>
+              <li>Karena berada di depan mata pengamat, gambar rusuk BC dengan <strong>GARIS TEBAL NYATA</strong>. Tuliskan keterangan <code>8 cm</code> tepat di bawahnya.</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-card" data-step-id="p-step-3">
+          <div class="step-header">
+            <div class="step-badge-wrap">
+              <div class="step-num">03</div>
+              <h3 class="step-title">Tentukan Titik A (Naik di Atas BC) &amp; Tarik Garis Putus-Putus AC dan AB</h3>
+            </div>
+            <button class="step-check-btn"><span>Tandai Selesai</span></button>
+          </div>
+          <div class="step-body">
+            <ol>
+              <li>Dari garis depan BC, tentukan posisi <strong>Titik A</strong> di bagian tengah <em>naik ke arah atas/belakang</em> (sesuai gambar acuan soal di mana titik A berada di atas rusuk BC).</li>
+              <li>Hubungkan <strong>Titik C miring naik ke Titik A</strong> dan <strong>Titik B miring naik ke Titik A</strong>.</li>
+              <li><strong>KAIDAH PENTING:</strong> Karena rusuk AC dan AB terletak di dinding belakang prisma yang tersembunyi, wajib digambar menggunakan <strong>GARIS PUTUS-PUTUS</strong>! Tuliskan ukuran <code>5 cm</code> di samping rusuk AB.</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step-card" data-step-id="p-step-4">
+          <div class="step-header">
+            <div class="step-badge-wrap">
+              <div class="step-num">04</div>
+              <h3 class="step-title">Tarik 3 Rusuk Tegak Vertikal Sejajar (CF, BE, dan AD)</h3>
+            </div>
+            <button class="step-check-btn"><span>Tandai Selesai</span></button>
+          </div>
+          <div class="step-body">
+            <ol>
+              <li>Dari titik C, tarik garis vertikal tegak lurus ke atas setinggi <strong>30 cm</strong> (atau 15 cm pada skala 1:2) menuju titik <strong>F</strong> dengan <strong>garis tebal nyata</strong>.</li>
+              <li>Dari titik B, tarik garis vertikal tegak lurus ke atas dengan panjang yang sama menuju titik <strong>E</strong> dengan <strong>garis tebal nyata</strong>. Tuliskan keterangan ukuran <code>30 cm</code> di samping kanannya.</li>
+              <li>Dari titik A (yang berada di atas garis BC), tarik garis vertikal tegak lurus ke atas dengan panjang yang sama persis menuju titik <strong>D</strong> menggunakan <strong>GARIS PUTUS-PUTUS</strong> (karena rusuk AD berada di dinding belakang prisma).</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step-card" data-step-id="p-step-5">
+          <div class="step-header">
+            <div class="step-badge-wrap">
+              <div class="step-num">05</div>
+              <h3 class="step-title">Gambar Bidang Tutup Segitiga DEF (Garis Nyata)</h3>
+            </div>
+            <button class="step-check-btn"><span>Tandai Selesai</span></button>
+          </div>
+          <div class="step-body">
+            <ol>
+              <li>Hubungkan titik <strong>F ke titik E</strong> dengan garis horizontal mendatar (8 cm).</li>
+              <li>Hubungkan titik <strong>F ke titik D</strong> dan titik <strong>E ke titik D</strong>.</li>
+              <li>Karena bidang tutup DEF ini tampak jelas dari sudut pandang atas, ketiga rusuk tutup (FE, FD, dan ED) seluruhnya digambar menggunakan <strong>GARIS TEBAL NYATA</strong>.</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="step-card" data-step-id="p-step-6">
+          <div class="step-header">
+            <div class="step-badge-wrap">
+              <div class="step-num">06</div>
+              <h3 class="step-title">Finishing Notasi Huruf Kapital &amp; Tebalkan Garis</h3>
+            </div>
+            <button class="step-check-btn"><span>Tandai Selesai</span></button>
+          </div>
+          <div class="step-body">
+            <ol>
+              <li>Pastikan huruf-huruf kapital titik sudut telah tertulis jelas: <code>A, B, C</code> pada alas dan <code>D, E, F</code> pada tutup.</li>
+              <li>Periksa kembali: hanya ada <strong>3 rusuk putus-putus</strong> yaitu <code>AC</code>, <code>AB</code>, dan <code>AD</code>, sedangkan 6 rusuk lainnya adalah garis tebal utuh.</li>
+              <li>Tebalkan garis nyata memakai spidol halus atau drawing pen hitam agar gambar tampak profesional dan siap dinilai!</li>
+            </ol>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+       BAGIAN 5: KALKULATOR PRISMA ABC.DEF
+  ════════════════════════════════════════ -->
+    <section class="guide-section glass">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sec-icon coral">🧮</div>
+          <div>
+            <h2 class="section-title">Kalkulator Dimensi &amp; Karakteristik Prisma ABC.DEF</h2>
+            <p class="section-sub">Hitung luas permukaan, volume, dan perkiraan ruang gambar di buku tulis</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-wrapper">
+        <div class="calc-input-box">
+          <div class="input-group">
+            <label for="calc-p-sisi-front">
+              <span>Rusuk Depan Alas (BC)</span>
+              <span class="unit">cm</span>
+            </label>
+            <input type="number" id="calc-p-sisi-front" class="calc-input" value="8" min="2" max="50" step="0.5">
+          </div>
+
+          <div class="input-group">
+            <label for="calc-p-sisi-side">
+              <span>Rusuk Kaki Alas (AB = AC)</span>
+              <span class="unit">cm</span>
+            </label>
+            <input type="number" id="calc-p-sisi-side" class="calc-input" value="5" min="2" max="50" step="0.5">
+          </div>
+
+          <div class="input-group">
+            <label for="calc-p-tinggi">
+              <span>Tinggi Prisma (AD = BE = CF)</span>
+              <span class="unit">cm</span>
+            </label>
+            <input type="number" id="calc-p-tinggi" class="calc-input" value="30" min="5" max="100" step="1">
+          </div>
+
+          <div class="calc-formula-desc">
+            <strong>Rumus Matematika Prisma ABC.DEF:</strong><br>
+            • Tinggi segitiga alas <code>h = √(5² - 4²) = 3 cm</code><br>
+            • Luas Alas = <code>½ × 8 × 3 = 12 cm²</code><br>
+            • Luas Permukaan = <code>(2 × L_alas) + ((AB + BC + AC) × t) = 24 + 540 = 564 cm²</code><br>
+            • Volume = <code>L_alas × t = 12 × 30 = 360 cm³</code>
+          </div>
+        </div>
+
+        <div class="calc-output-box">
+          <div class="output-metric-grid">
+            <div class="metric-card">
+              <div class="metric-label">Luas Permukaan (Lp)</div>
+              <div class="metric-val gold"><span id="res-p-lp">564.0</span><span class="metric-unit">cm²</span></div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-label">Volume Prisma (V)</div>
+              <div class="metric-val teal"><span id="res-p-vol">360.0</span><span class="metric-unit">cm³</span></div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-label">Total Panjang Rusuk</div>
+              <div class="metric-val"><span id="res-p-rusuk">126.0</span><span class="metric-unit">cm</span></div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-label">Area Gambar di Buku (Skala 1:2)</div>
+              <div class="metric-val coral"><span id="res-p-karton">10 × 18</span><span class="metric-unit">cm</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+       FOOTER CTA
+  ════════════════════════════════════════ -->
+    <section class="panduan-footer-card glass">
+      <h3>Ingin Mempelajari Cara Menggambar Limas Segiempat?</h3>
+      <p>
+        Buka panduan khusus Limas Segiempat T.ABCD untuk mempelajari teknik menggambar alas jajar genjang dan penarikan titik puncak yang tegak lurus sempurna.
+      </p>
+      <div class="panduan-footer-btns">
+        <a href="panduan-limas.html" class="btn-action-pill primary">🔺 Buka Panduan Menggambar Limas T.ABCD</a>
+        <a href="demo.html?shape=prisma" class="btn-action-pill outline">🖥️ Buka Mode Demo 3D</a>
+        <a href="index.html" class="btn-action-pill outline">🏠 Kembali ke Beranda</a>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="panduan-prisma.js"></script>
+</body>
+
+</html>

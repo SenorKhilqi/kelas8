@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panduan Menggambar Limas Segiempat T.ABCD | LKPD Kelas VIII</title>
+  <meta name="description"
+    content="Panduan langkah demi langkah cara menggambar representasi 3D Limas Segiempat T.ABCD pada buku berpetak/kertas gambar — Matematika Kelas VIII SMP">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="panduan.css">
+  <script src="three.min.js"></script>
+</head>
+
+<body class="page-panduan">
+
+  <!-- Background Animated Orbs -->
+  <div class="panduan-bg"></div>
+
+  <div class="panduan-container">
+
+    <!-- ════════════════════════════════════════
+       TOP STICKY NAVBAR
+  ════════════════════════════════════════ -->
+    <header class="panduan-nav">
+      <div class="nav-left">
+        <a href="index.html" class="btn-nav-back">← Beranda</a>
+        <div class="nav-brand">
+          <span>📐 LKPD Matematika</span>
+          <span class="nav-badge">Kelas VIII SMP</span>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <a href="panduan-prisma.html" class="nav-btn-link" style="border-color: rgba(78, 205, 196, 0.4); background: rgba(78, 205, 196, 0.12); color: #4ECDC4;" title="Buka panduan prisma segitiga">🔷 Buka Panduan Prisma</a>
+        <a href="demo.html?shape=limas" class="nav-btn-link" title="Jelajahi model 3D">🖥️ Demo 3D</a>
+        <a href="ar.html" class="nav-btn-link teal" title="Eksplorasi kamera AR">📷 Mode AR</a>
+        <button class="nav-btn-link" onclick="LimasGuide.printGuide()" title="Cetak panduan menggambar">🖨️ Cetak</button>
+      </div>
+    </header>
+
+    <!-- ════════════════════════════════════════
+       HERO BANNER
+  ════════════════════════════════════════ -->
+    <section class="panduan-hero glass">
+      <div class="hero-pill">✏️ Panduan Geometri 3D · Bangun Ruang Sisi Datar</div>
+      <h1>Langkah &amp; Cara Menggambar <br><span class="gradient-text">Limas Segiempat T.ABCD</span></h1>
+      <p class="hero-desc">
+        Panduan langkah demi langkah menggambar bangun ruang Limas Segiempat T.ABCD pada buku tulis berpetak sesuai gambar soal.
+        Pelajari cara menggambar proyeksi alas jajar genjang, menentukan titik puncak T tegak lurus, dan aturan rusuk putus-putus.
+      </p>
+
+      <!-- Shape Switcher Link Bar -->
+      <div class="shape-tab-wrapper">
+        <div class="shape-tab-bar">
+          <a href="panduan-prisma.html" class="guide-shape-btn" style="text-decoration:none;">
+            <span>🔷</span>
+            <span>← Buka Prisma Segitiga ABC.DEF</span>
+          </a>
+          <a href="panduan-limas.html" class="guide-shape-btn active" style="text-decoration:none;">
+            <span>🔺</span>
+            <span>Limas Segiempat T.ABCD (Aktif)</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+       ANIMATION STUDIO: SIMULASI MENGGAMBAR LIMAS
+  ════════════════════════════════════════ -->
+    <section class="guide-section glass anim-studio-section" id="anim-studio">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sec-icon coral">🎬</div>
+          <div>
+            <h2 class="section-title">Simulasi Animasi: Tahapan Menggambar Limas T.ABCD</h2>
+            <p class="section-sub">Saksikan pensil dan penggaris menggambar rusuk demi rusuk: dari alas jajar genjang, titik pusat O, tinggi OT, hingga titik puncak T</p>
+          </div>
+        </div>
+        <div class="anim-actions-group">
+          <button class="anim-speed-btn" data-speed="0.5">0.5×</button>
+          <button class="anim-speed-btn active" data-speed="1">1×</button>
+          <button class="anim-speed-btn" data-speed="2">2×</button>
+          <button class="btn-nav-back" id="anim-btn-reset">🔄 Ulangi</button>
+        </div>
+      </div>
+
+      <!-- Stage Selector Tabs (1 to 5) -->
+      <div class="anim-stages-selector">
+        <button class="anim-stage-btn active" id="anim-stage-btn-1">
+          <span>📐</span> <span>1. Alas Jajar Genjang</span>
+        </button>
+        <button class="anim-stage-btn" id="anim-stage-btn-2">
+          <span>📏</span> <span>2. Pusat O &amp; Tinggi OT</span>
+        </button>
+        <button class="anim-stage-btn" id="anim-stage-btn-3">
+          <span>✏️</span> <span>3. Rusuk Miring Puncak</span>
+        </button>
+        <button class="anim-stage-btn" id="anim-stage-btn-4">
+          <span>🔍</span> <span>4. Garis Putus-Putus</span>
+        </button>
+        <button class="anim-stage-btn" id="anim-stage-btn-5">
+          <span>✨</span> <span>5. Notasi Titik &amp; 3D</span>
+        </button>
+      </div>
+
+      <!-- Animation Viewport Screen -->
+      <div class="anim-stage-container">
+        <div class="anim-viewport-wrap">
+          <canvas id="anim-canvas-2d"></canvas>
+          <div id="anim-canvas-3d-wrap"></div>
+        </div>
+        <div class="anim-overlay-hint" id="anim-hint-badge">
+          <span>💡 Seret untuk putar 3D (pada tahap 5) untuk melihat perspektif dari berbagai sudut</span>
+        </div>
+      </div>
+
+      <!-- Timeline & Playback Scrubber -->
+      <div class="anim-controls-wrap">
+        <div class="anim-scrubber-row">
+          <input type="range" id="anim-scrubber" class="anim-scrubber" min="0" max="100" value="0">
+          <span class="anim-pct-badge" id="anim-pct-label">0%</span>
+        </div>
+        <div class="anim-buttons-row">
+          <button class="anim-btn-play" id="anim-btn-play">
+            <span>▶️ Putar Animasi</span>
+          </button>
+          <span style="font-size:0.75rem; color:var(--muted);">Geser slider untuk melihat penarikan setiap rusuk tahap demi tahap</span>
+        </div>
+      </div>
+
+      <!-- Dynamic Story & Explanation Card -->
+      <div class="anim-story-card">
+        <div class="anim-story-header">
+          <span class="anim-story-badge" id="anim-story-badge">Tahap 1 dari 5</span>
+          <span style="font-size:0.75rem; color:var(--gold);">Live Drafting Guide</span>
+        </div>
+        <h4 class="anim-story-title" id="anim-story-title">📐 1. Menggambar Alas Jajar Genjang</h4>
+        <p class="anim-story-desc" id="anim-story-desc">
+          Menggambar rusuk depan AB dan samping kanan BC dengan garis tebal nyata, lalu menarik rusuk belakang AD dan CD menggunakan garis putus-putus.
+        </p>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+       BAGIAN 1: ALAT & MEDIA MENGGAMBAR
+  ════════════════════════════════════════ -->
+    <section class="guide-section glass">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sec-icon teal">✏️</div>
+          <div>
+            <h2 class="section-title">Peralatan untuk Menggambar Bangun Ruang</h2>
+            <p class="section-sub">Siapkan perlengkapan alat tulis geometri berikut sebelum mulai menggambar di buku tugas</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-emoji">✏️</div>
+          <div class="tool-info">
+            <h4>Pensil 2B &amp; Penghapus</h4>
+            <p>Untuk membuat garis sketsa diagonal dan tinggi tipis agar mudah dihapus atau ditegaskan nanti.</p>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-emoji">📏</div>
+          <div class="tool-info">
+            <h4>Penggaris Mistar 20–30 cm</h4>
+            <p>Wajib digunakan saat menarik rusuk alas dan rusuk tegak miring menuju puncak T agar presisi.</p>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-emoji">📓</div>
+          <div class="tool-info">
+            <h4>Buku Tulis Berpetak (Grid Paper)</h4>
+            <p>Sangat dianjurkan! Kotak berpetak memudahkan membuat kemiringan jajar genjang yang rapi dan konsisten.</p>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-emoji">🖊️</div>
+          <div class="tool-info">
+            <h4>Drawing Pen (0.3–0.5 mm)</h4>
+            <p>Untuk menebalkan rusuk-rusuk nyata yang terlihat di bagian depan (rusuk AB, BC, TA, TB, dan TC).</p>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-emoji">📐</div>
+          <div class="tool-info">
+            <h4>Busur Derajat</h4>
+            <p>Untuk memastikan garis tinggi limas berdiri tegak lurus 90° tepat dari titik pusat proyeksi alas O.</p>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-emoji">⭕</div>
+          <div class="tool-info">
+            <h4>Jangka Geometri</h4>
+            <p>Untuk memastikan jarak sisi rusuk alas persegi teratur sama panjang di seluruh sisi.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kaidah Emas Menggambar Limas -->
+      <div class="tip-box" style="border-color: rgba(255, 107, 107, 0.4); background: rgba(255, 107, 107, 0.08);">
+        <div class="tip-icon">⭐</div>
+        <div class="tip-text">
+          <h5 style="color: var(--coral);">Kaidah Penting Menggambar Limas Segiempat:</h5>
+          <ul style="margin: 0.4rem 0 0 1.2rem; line-height: 1.6; font-size: 0.88rem;">
+            <li><strong>1. Proyeksi Alas Jajar Genjang:</strong> Walaupun alasnya persegi, gambar 3D harus berbentuk jajar genjang agar tampak memiliki kedalaman ruang.</li>
+            <li><strong>2. Rusuk Nyata Depan:</strong> Rusuk alas depan $AB$, rusuk samping $BC$, serta rusuk miring $TA$, $TB$, $TC$ digambar dengan <strong>garis tebal utuh</strong>.</li>
+            <li><strong>3. Rusuk Tersembunyi:</strong> Rusuk alas belakang $AD$ dan $CD$, serta rusuk tegak belakang $TD$ wajib digambar dengan <strong>GARIS PUTUS-PUTUS</strong>.</li>
+            <li><strong>4. Garis Tinggi Limas:</strong> Garis tinggi dari puncak $T$ turun ke pusat alas $O$ digambar dengan <strong>garis putus-putus</strong> di bagian dalam bangun ruang.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+       BAGIAN 2: GAMBAR ACUAN SOAL LIMAS
+  ════════════════════════════════════════ -->
+    <section class="guide-section glass" style="border: 1px solid rgba(255, 107, 107, 0.4); background: rgba(255, 107, 107, 0.05);">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sec-icon coral">📷</div>
+          <div>
+            <h2 class="section-title">Gambar Acuan Model: Limas Segiempat T.ABCD</h2>
+            <p class="section-sub">Panduan menggambar mengacu persis pada orientasi sudut dan titik pada gambar acuan soal ini</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1.75rem; align-items: center; flex-wrap: wrap;">
+        <!-- Gambar Ref Asli Limas Sesuai Permintaan User -->
+        <div style="background: rgba(255, 255, 255, 0.96); padding: 1rem; border-radius: var(--r-lg); box-shadow: 0 8px 30px rgba(0,0,0,0.5); text-align: center; flex: 0 0 240px; margin: 0 auto;">
+          <img src="limas-ref.png" alt="Gambar Acuan Limas Segiempat T.ABCD" style="max-width: 100%; height: auto; display: block; border-radius: 8px;">
+          <span style="font-size: 0.75rem; color: #111; font-weight: 800; margin-top: 0.5rem; display: block;">Limas Segiempat T.ABCD</span>
+        </div>
+
+        <!-- Rincian Data Ukuran & Titik Sesuai Gambar -->
+        <div style="flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 0.85rem;">
+          <h4 style="color: var(--gold); font-size: 1.15rem; font-weight: 800;">Karakteristik &amp; Letak Titik Berdasarkan Gambar Acuan:</h4>
+          <ul style="font-size: 0.9rem; line-height: 1.65; margin-left: 1.3rem; color: var(--text);">
+            <li><strong>Titik Puncak (Atas):</strong> Titik <code>T</code> di posisi teratas.</li>
+            <li><strong>Titik Sudut Alas (Bawah):</strong> Titik <code>A</code> (kiri depan), <code>B</code> (kanan depan), <code>C</code> (kanan belakang), <code>D</code> (kiri belakang).</li>
+            <li><strong>Rusuk Alas Tampak (Garis Nyata):</strong> Rusuk <code>AB</code> (depan mendatar) dan <code>BC</code> (samping kanan miring).</li>
+            <li><strong>Rusuk Alas Belakang (Garis Putus-Putus):</strong> Rusuk <code>CD</code> (belakang mendatar) dan <code>AD</code> (samping kiri miring).</li>
+            <li><strong>Rusuk Tegak Miring Tampak (Garis Nyata):</strong> <code>TA</code>, <code>TB</code>, dan <code>TC</code> (menghadap ke arah pengamat).</li>
+            <li><strong>Rusuk Tegak Tersembunyi (Garis Putus-Putus):</strong> Rusuk <code>TD</code> (menghubungkan puncak T ke sudut belakang D).</li>
+            <li><strong>Garis Tinggi Vertikal:</strong> Garis putus-putus tegak lurus dari puncak T turun menembus bidang alas di bagian dalam limas.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+       BAGIAN 3: DIAGRAM VEKTOR PERSPEKTIF 3D LIMAS
+  ════════════════════════════════════════ -->
+    <section class="guide-section glass">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sec-icon">🔺</div>
+          <div>
+            <h2 class="section-title">Diagram Perspektif 3D: Limas Segiempat T.ABCD</h2>
+            <p class="section-sub">Skema vektor stereometri presisi sesuai gambar acuan soal limas-ref.png</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="diagram-container">
+        <div class="diagram-box">
+          <svg viewBox="0 0 760 520" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="limas-front-fill" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#FF6B6B" stop-opacity="0.25"/>
+                <stop offset="100%" stop-color="#FFD93D" stop-opacity="0.12"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Koordinat Titik Sesuai Gambar Acuan: -->
+            <!-- A(180, 420), B(460, 420), C(620, 310), D(300, 310), T(370, 70), O(390, 365) -->
+
+            <!-- 1. Bidang Sisi Tegak Depan TAB dan TBC (Shading Lembut) -->
+            <polygon points="370,70 180,420 460,420" fill="url(#limas-front-fill)" />
+            <polygon points="370,70 460,420 620,310" fill="rgba(255, 107, 107, 0.15)" />
+
+            <!-- ── GARIS BANTU TINGGI VERTIKAL (PUTUS-PUTUS / DASHED) ── -->
+            <line x1="370" y1="70" x2="370" y2="395" stroke="#FFD93D" stroke-width="2.8" stroke-dasharray="6,4" />
+            <text x="385" y="240" fill="#FFD93D" font-size="13" font-weight="800">Tinggi (t)</text>
+
+            <!-- ── RUSUK-RUSUK TERSEMBUNYI (PUTUS-PUTUS / DASHED) ── -->
+            <!-- Rusuk Alas Belakang AD dan CD -->
+            <line x1="180" y1="420" x2="300" y2="310" stroke="#4ECDC4" stroke-width="2.8" stroke-dasharray="8,5" />
+            <line x1="620" y1="310" x2="300" y2="310" stroke="#4ECDC4" stroke-width="2.8" stroke-dasharray="8,5" />
+
+            <!-- Rusuk Tegak Belakang TD -->
+            <line x1="370" y1="70" x2="300" y2="310" stroke="#FF6B6B" stroke-width="2.8" stroke-dasharray="8,5" />
+
+            <!-- ── RUSUK-RUSUK TAMPAK (TEBAL UTUH / SOLID) ── -->
+            <!-- Rusuk Alas Depan AB dan Kanan BC -->
+            <line x1="180" y1="420" x2="460" y2="420" stroke="#00FFEE" stroke-width="3.8" />
+            <line x1="460" y1="420" x2="620" y2="310" stroke="#00FFEE" stroke-width="3.8" />
+
+            <!-- Rusuk Tegak Depan TA, TB, TC -->
+            <line x1="370" y1="70" x2="180" y2="420" stroke="#00FFEE" stroke-width="3.8" />
+            <line x1="370" y1="70" x2="460" y2="420" stroke="#00FFEE" stroke-width="3.8" />
+            <line x1="370" y1="70" x2="620" y2="310" stroke="#00FFEE" stroke-width="3.8" />
+
+            <!-- ── TITIK-TITIK SUDUT (VERTICES) PERSIS SESUAI GAMBAR ── -->
+            <!-- Puncak T -->
+            <circle cx="370" cy="70" r="6" fill="#FF6B6B" />
+            <text x="370" y="52" fill="#FFFFFF" font-size="18" font-weight="800" text-anchor="middle">T</text>
+
+            <!-- Titik Sudut Alas A, B, C, D -->
+            <circle cx="180" cy="420" r="5.5" fill="#00FFEE" />
+            <text x="158" y="435" fill="#FFFFFF" font-size="16" font-weight="800">A</text>
+
+            <circle cx="460" cy="420" r="5.5" fill="#00FFEE" />
+            <text x="472" y="435" fill="#FFFFFF" font-size="16" font-weight="800">B</text>
+
+            <circle cx="620" cy="310" r="5.5" fill="#00FFEE" />
+            <text x="635" y="315" fill="#FFFFFF" font-size="16" font-weight="800">C</text>
+
+            <circle cx="300" cy="310" r="5.5" fill="#4ECDC4" />
+            <text x="290" y="332" fill="#FFFFFF" font-size="16" font-weight="800">D</text>
+
+            <!-- Legend Kotak -->
+            <rect x="540" y="120" width="200" height="90" rx="8" fill="rgba(18, 18, 43, 0.9)" stroke="rgba(255,255,255,0.15)"/>
+            <text x="552" y="142" fill="#00FFEE" font-size="11" font-weight="700">─── Rusuk Nyata Tampak</text>
+            <text x="552" y="164" fill="#4ECDC4" font-size="11" font-weight="700">- - - Rusuk Putus-Putus (AD, CD, TD)</text>
+            <text x="552" y="186" fill="#FFD93D" font-size="11" font-weight="700">- - - Garis Tinggi Vertikal</text>
+          </svg>
+        </div>
+
+        <div class="diagram-legend">
+          <div class="legend-item">
+            <span class="legend-line" style="background:#00FFEE; height:3px;"></span>
+            <span>Rusuk Nyata (AB, BC, TA, TB, TC)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-line line-fold"></span>
+            <span>Rusuk Putus-Putus (AD, CD, TD)</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-line" style="background:#FFD93D; height:2px; border-top:1px dashed #FFD93D;"></span>
+            <span>Garis Tinggi Limas Vertikal</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-swatch" style="background: rgba(255, 107, 107, 0.25); border: 1px solid #FF6B6B;"></span>
+            <span>Bidang Sisi Tegak TAB &amp; TBC</span>
+          </div>
+        </div>
+
+        <div class="diagram-footer-actions">
+          <a href="demo.html?shape=limas&scene=1" class="btn-action-pill primary">
+            <span>🔺</span>
+            <span>Lihat Model 3D Limas Interaktif</span>
+          </a>
+          <button onclick="LimasGuide.printGuide()" class="btn-action-pill outline">
+            <span>🖨️</span>
+            <span>Cetak Panduan Limas Ini</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+       BAGIAN 4: LANGKAH DEMI LANGKAH MENGGAMBAR LIMAS
+  ════════════════════════════════════════ -->
+    <section class="guide-section glass">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sec-icon gold">📝</div>
+          <div>
+            <h2 class="section-title">Langkah-Langkah Menggambar Limas Segiempat T.ABCD</h2>
+            <p class="section-sub">Panduan 6 tahap terstruktur menggambar limas segiempat di buku tulismu</p>
+          </div>
+        </div>
+        <button class="btn-nav-back" onclick="LimasGuide.resetChecklist()">🔄 Reset Centang</button>
+      </div>
+
+      <div class="progress-container">
+        <div class="progress-meta">
+          <span>Kemajuan Menggambar Limas T.ABCD:</span>
+          <span class="count" id="progress-text-limas">0 dari 6 Langkah Selesai (0%)</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-bar-limas"></div>
+        </div>
+      </div>
+
+      <div class="steps-list">
+
+        <!-- Step 1 -->
+        <div class="step-card" data-step-id="l-step-1">
+          <div class="step-header">
+            <div class="step-badge-wrap">
+              <div class="step-num">01</div>
+              <h3 class="step-title">Tentukan Skala &amp; Konsep Alas Jajar Genjang</h3>
+            </div>
+            <button class="step-check-btn"><span>Tandai Selesai</span></button>
+          </div>
+          <div class="step-body">
+            <p>
+              <strong>Konsep Utama Gambar Ruang 3D:</strong> Meskipun bentuk asli alas limas adalah bujur sangkar persegi, pada gambar proyeksi miring alas harus digambar berupa <strong>jajar genjang</strong> agar tampak berkedalaman 3D!
+            </p>
+            <ul>
+              <li><strong>Rusuk Depan (AB):</strong> Digambar mendatar (horizontal) sepanjang ukuran skala (misal 6 cm atau 8 cm).</li>
+              <li><strong>Rusuk Miring (BC dan AD):</strong> Digambar miring ke arah kanan atas (sudut surut sekitar 30°–45°) dan panjangnya diperpendek (biasanya ½ panjang depan) agar tidak terlihat janggal.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-card" data-step-id="l-step-2">
+          <div class="step-header">
+            <div class="step-badge-wrap">
+              <div class="step-num">02</div>
+              <h3 class="step-title">Gambar Bidang Alas Jajar Genjang ABCD</h3>
+            </div>
+            <button class="step-check-btn"><span>Tandai Selesai</span></button>
+          </div>
+          <div class="step-body">
+            <ol>
+              <li>Tarik garis horizontal mendatar <code>A → B</code> di bagian depan dengan <strong>garis tebal nyata</strong>.</li>
+              <li>Dari titik B, tarik garis miring ke arah kanan atas menuju titik <strong>C</strong> dengan <strong>garis tebal nyata</strong> (karena rusuk BC tampak di sisi kanan).</li>
+              <li>Dari titik A, tarik garis miring sejajar ke titik <strong>D</strong> menggunakan <strong>GARIS PUTUS-PUTUS</strong> (rusuk AD berada di dinding belakang).</li>
+              <li>Hubungkan titik D ke titik C dengan garis mendatar menggunakan <strong>GARIS PUTUS-PUTUS</strong> (rusuk CD berada di belakang).</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-card" data-step-id="l-step-3">
+          <div class="step-header">
+            <div class="step-badge-wrap">
+              <div class="step-num">03</div>
+              <h3 class="step-title">Tentukan Titik Pusat Proyeksi Alas (O)</h3>
+            </div>
+            <button class="step-check-btn"><span>Tandai Selesai</span></button>
+          </div>
+          <div class="step-body">
+            <ol>
+              <li>Gunakan pensil tipis untuk menarik garis diagonal <code>A → C</code> (putus-putus tipis).</li>
+              <li>Tarik garis diagonal kedua <code>B → D</code> (putus-putus tipis).</li>
+              <li>Titik potong kedua garis diagonal tersebut adalah <strong>Titik Pusat Alas (Titik O)</strong>. Titik ini menjadi patokan proyeksi tegak lurus untuk puncak limas.</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step-card" data-step-id="l-step-4">
+          <div class="step-header">
+            <div class="step-badge-wrap">
+              <div class="step-num">04</div>
+              <h3 class="step-title">Tarik Garis Tinggi Vertikal Menuju Puncak T</h3>
+            </div>
+            <button class="step-check-btn"><span>Tandai Selesai</span></button>
+          </div>
+          <div class="step-body">
+            <ol>
+              <li>Tepat dari Titik Pusat Alas (O), letakkan penggaris tegak lurus vertikal ke atas (sudut siku-siku 90° terhadap garis horizontal).</li>
+              <li>Tarik garis bantu putus-putus ke atas sepanjang tinggi limas (misal 10 cm).</li>
+              <li>Beri tanda titik di ujung atas garis tersebut dan beri nama <strong>Titik Puncak T (Apex)</strong>.</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step-card" data-step-id="l-step-5">
+          <div class="step-header">
+            <div class="step-badge-wrap">
+              <div class="step-num">05</div>
+              <h3 class="step-title">Hubungkan Puncak T ke Seluruh Sudut Alas</h3>
+            </div>
+            <button class="step-check-btn"><span>Tandai Selesai</span></button>
+          </div>
+          <div class="step-body">
+            <ol>
+              <li>Hubungkan <strong>Titik T ke Titik A</strong> dengan <strong>garis tebal nyata</strong> (rusuk miring depan kiri TA).</li>
+              <li>Hubungkan <strong>Titik T ke Titik B</strong> dengan <strong>garis tebal nyata</strong> (rusuk miring depan tengah TB).</li>
+              <li>Hubungkan <strong>Titik T ke Titik C</strong> dengan <strong>garis tebal nyata</strong> (rusuk miring kanan TC).</li>
+              <li>Hubungkan <strong>Titik T ke Titik D</strong> dengan <strong>GARIS PUTUS-PUTUS</strong>! Karena titik D berada di sudut belakang, rusuk tegak TD terhalang oleh bidang depan limas.</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="step-card" data-step-id="l-step-6">
+          <div class="step-header">
+            <div class="step-badge-wrap">
+              <div class="step-num">06</div>
+              <h3 class="step-title">Finishing Notasi Huruf Kapital &amp; Keterangan Ukuran</h3>
+            </div>
+            <button class="step-check-btn"><span>Tandai Selesai</span></button>
+          </div>
+          <div class="step-body">
+            <ol>
+              <li>Tuliskan nama limas: <strong>Limas Segiempat T.ABCD</strong>.</li>
+              <li>Pastikan huruf-huruf kapital titik sudut telah tertulis persis seperti gambar acuan: <code>T</code> di puncak, <code>A</code> di kiri depan, <code>B</code> di kanan depan, <code>C</code> di kanan belakang, dan <code>D</code> di kiri belakang.</li>
+              <li>Periksa kembali: rusuk putus-putus ada 3 rusuk utama (<code>AD</code>, <code>CD</code>, dan <code>TD</code>) serta garis tinggi di tengah.</li>
+              <li>Tebalkan rusuk nyata dengan spidol hitam atau drawing pen. <strong>Selesai!</strong> Gambar Limas Segiempat T.ABCD telah siap dan sempurna!</li>
+            </ol>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+       BAGIAN 5: KALKULATOR LIMAS
+  ════════════════════════════════════════ -->
+    <section class="guide-section glass">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="sec-icon coral">🧮</div>
+          <div>
+            <h2 class="section-title">Kalkulator Dimensi &amp; Karakteristik Limas</h2>
+            <p class="section-sub">Hitung luas permukaan, volume, dan perkiraan ruang gambar di buku tulis</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="calc-wrapper">
+        <div class="calc-input-box">
+          <div class="input-group">
+            <label for="calc-l-alas">
+              <span>Panjang Rusuk Alas Persegi (a)</span>
+              <span class="unit">cm</span>
+            </label>
+            <input type="number" id="calc-l-alas" class="calc-input" value="8" min="3" max="50" step="0.5">
+          </div>
+
+          <div class="input-group">
+            <label for="calc-l-tinggi">
+              <span>Tinggi Tegak Limas (H)</span>
+              <span class="unit">cm</span>
+            </label>
+            <input type="number" id="calc-l-tinggi" class="calc-input" value="10" min="3" max="50" step="0.5">
+          </div>
+
+          <div class="calc-formula-desc">
+            <strong>Rumus Matematika Kelas VIII:</strong><br>
+            • Tinggi Sisi Miring (ts) = <code>√(H² + (a/2)²) = √(10² + 4²) = √116 ≈ 10.8 cm</code><br>
+            • Luas Permukaan = <code>Luas Alas + 4 × Luas Segitiga = a² + 2 × a × ts</code><br>
+            • Volume = <code>⅓ × Luas Alas × Tinggi Limas = ⅓ × a² × H</code><br>
+            • Jumlah Rusuk: 8 rusuk (4 rusuk alas + 4 rusuk tegak)
+          </div>
+        </div>
+
+        <div class="calc-output-box">
+          <div class="output-metric-grid">
+            <div class="metric-card">
+              <div class="metric-label">Luas Permukaan (Lp)</div>
+              <div class="metric-val gold"><span id="res-l-lp">236.4</span><span class="metric-unit">cm²</span></div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-label">Volume Limas (V)</div>
+              <div class="metric-val teal"><span id="res-l-vol">213.3</span><span class="metric-unit">cm³</span></div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-label">Panjang Kerangka Rusuk</div>
+              <div class="metric-val"><span id="res-l-rusuk">78.0</span><span class="metric-unit">cm</span></div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-label">Area Gambar di Buku</div>
+              <div class="metric-val coral"><span id="res-l-karton">10 × 14</span><span class="metric-unit">cm</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+       FOOTER CTA
+  ════════════════════════════════════════ -->
+    <section class="panduan-footer-card glass">
+      <h3>Ingin Mempelajari Cara Menggambar Prisma Segitiga?</h3>
+      <p>
+        Buka panduan khusus Prisma Segitiga ABC.DEF untuk mempelajari teknik menggambar 3 rusuk tegak sejajar vertikal dan bidang tutup segitiga di bagian atas.
+      </p>
+      <div class="panduan-footer-btns">
+        <a href="panduan-prisma.html" class="btn-action-pill primary">🔷 Buka Panduan Menggambar Prisma ABC.DEF</a>
+        <a href="demo.html?shape=limas" class="btn-action-pill outline">🖥️ Buka Mode Demo 3D</a>
+        <a href="index.html" class="btn-action-pill outline">🏠 Kembali ke Beranda</a>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="panduan-limas.js"></script>
+</body>
+
+</html>
